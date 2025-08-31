@@ -10,7 +10,7 @@ Checkout [INSTALL](INSTALL.md) doc for installation instructions.
 
 - **Consensus Client:** Geth POA
 - **Token Standards:** QUBE-20, QUBE-721, QUBE-1155
-- **Total Supply:** 21,000,000 QUBE
+- **Total Supply:** 9,000,000 QUBE
 - **Average Block Time:** 5 Seconds
 
 ## QUBE MainNet

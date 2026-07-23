@@ -234,8 +234,9 @@ public:
         // BitQube BIP44 cointype in mainnet
         nExtCoinType = 8851;
 
-        // BitQube: bootstrap via the DNS seed (seed.bitqube.org -> 5.78.82.123). No stale fixed seeds.
-        vFixedSeeds.clear();
+        // BitQube: fixed seed nodes (contrib/seeds/nodes_main.txt -> chainparamsseeds.h),
+        // in addition to the DNS seed (seed.bitqube.org).
+        vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_main, pnSeed6_main + ARRAYLEN(pnSeed6_main));
 
         fDefaultConsistencyChecks = false;
         fRequireStandard = true;

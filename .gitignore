@@ -123,3 +123,6 @@ contrib/devtools/split-debug.sh
 cmake-build-debug
 
 CMakeLists.txt
+
+# BitQube: packaged release binaries/artifacts (never commit)
+/release/

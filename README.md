@@ -1,104 +1,147 @@
-BitQube Core integration/staging tree
-=====================================
+<p align="center">
+  <img src="bitqube-logo.png" alt="BitQube" width="160">
+</p>
 
-https://bitqube.org
+# BitQube Core (BTQ)
 
-To see how to run BitQube, please read the respective files in [the doc folder](doc)
+**Mine · Participate · Transact**
 
+BitQube (BTQ) is a Proof-of-Work digital asset built for fair distribution, a
+transparent fixed emission, and long-term ecosystem participation. It is a fork
+of [Ravencoin](https://ravencoin.org) (itself derived from Bitcoin), retaining
+the full asset/token layer while introducing BitQube's own economics, network,
+and branding.
 
-What is BitQube?
-----------------
+- **Website:** https://bitqube.org
+- **Consensus:** Proof of Work — **KawPoW** (GPU-friendly, ASIC-resistant)
+- **Block time:** 1 minute
+- **Max supply:** 8,000,000 BTQ (fixed — no inflation after emission ends)
 
-BitQube is an experimental digital currency that enables instant payments to
-anyone, anywhere in the world. The BitQube platform also lets anyone create assets (tokens) on the BitQube network. 
-Assets can be used for NFTs, STOs, Gift Cards, and fractional ownership of anything of value.
-BitQube uses peer-to-peer technology to operate
-with no central authority: managing transactions and issuing money are carried
-out collectively by the network. 
+---
 
+## Key parameters
 
+| | |
+|---|---|
+| Coin name / ticker | BitQube / **BTQ** |
+| Smallest unit | **Bit** (1 BTQ = 100,000,000 Bits) · 8 decimals |
+| Max supply | **8,000,000 BTQ** |
+| Block time | 1 minute (525,600 blocks/year) |
+| PoW algorithm | KawPoW (from launch) |
+| Community mining | 7,358,400 BTQ (91.98%) |
+| Ecosystem Reserve | 641,600 BTQ (8.02%, minted in block 1) |
+| Mainnet P2P port | 8851 |
+| Testnet P2P port | 18851 |
+| Address prefix | `B` (P2PKH), `b` (P2SH) |
+| DNS seed | seed.bitqube.org |
 
-License
--------
+## Emission schedule
 
-BitQube Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
-information or see https://opensource.org/licenses/MIT.
+An 8-phase, 8-year step-down. After the final mined block (**4,204,799**) no new
+BTQ is ever created; miners continue to earn transaction fees.
 
-Development Process
--------------------
+| Phase / Year | Block range | Reward/block | BTQ generated |
+|---|---|---|---|
+| 1 | 0 – 525,599 | 3.5 BTQ | 1,839,600 |
+| 2 | 525,600 – 1,051,199 | 2.8 BTQ | 1,471,680 |
+| 3 | 1,051,200 – 1,576,799 | 2.2 BTQ | 1,156,320 |
+| 4 | 1,576,800 – 2,102,399 | 1.8 BTQ | 946,080 |
+| 5 | 2,102,400 – 2,627,999 | 1.4 BTQ | 735,840 |
+| 6 | 2,628,000 – 3,153,599 | 1.1 BTQ | 578,160 |
+| 7 | 3,153,600 – 3,679,199 | 0.9 BTQ | 473,040 |
+| 8 | 3,679,200 – 4,204,799 | 0.3 BTQ | 157,680 |
 
-The `master` branch is regularly built and tested, but is not guaranteed to be
-completely stable. [Tags](https://github.com/BitQubeProject/BitQube/tags) are created
-regularly to indicate new official, stable release versions of BitQube Core.
+Block **1** additionally mints the **641,600 BTQ Ecosystem Reserve** premine
+(development, infrastructure, security, partnerships, listings). Mined emission
+(7,358,400) + reserve (641,600) = **8,000,000 BTQ** exactly.
 
-Active development is done in the `develop` branch. 
+> **Launch note:** the first **5,000 blocks** are pinned to a low difficulty
+> floor so the network can be bootstrapped with CPU mining, after which the Dark
+> Gravity Wave retarget takes over.
 
-The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md).
+---
 
-Developer IRC is inactive please join us on discord in #development. https://discord.gg/fndp4NBGct
+## Binaries
 
-Testing
--------
+BitQube ships the standard Bitcoin/Ravencoin binary set:
 
-Testing and code review is the bottleneck for development; we get more pull
-requests than we can review and test on short notice. Please be patient and help out by testing
-other people's pull requests, and remember this is a security-critical project where any mistake might cost people
-lots of money.
+- `bitqubed` — full node daemon
+- `bitqube-cli` — RPC command-line client
+- `bitqube-tx` — transaction construction utility
+- `bitqube-qt` — desktop wallet (GUI)
 
-Testnet is up and running and available to use during development.
+## Running a node
 
-### Automated Testing
+```bash
+# start the daemon
+bitqubed -daemon
 
-Developers are strongly encouraged to write [unit tests](src/test/README.md) for new code, and to
-submit new unit tests for old code. Unit tests can be compiled and run
-(assuming they weren't disabled in configure) with: `make check`. Further details on running
-and extending unit tests can be found in [/src/test/README.md](/src/test/README.md).
+# basic queries
+bitqube-cli getblockchaininfo
+bitqube-cli getpeerinfo
 
-There are also [regression and integration tests](/test), written
-in Python, that are run automatically on the build server.
-These tests can be run (if the [test dependencies](/test) are installed) with: `test/functional/test_runner.py`
+# a wallet address (starts with 'B')
+bitqube-cli getnewaddress
+```
 
+To help the network, run a listening node with **TCP port 8851** open to the
+internet. New nodes bootstrap from `seed.bitqube.org` plus the hardcoded fixed
+seeds.
 
-### Manual Quality Assurance (QA) Testing
+## Building from source (Ubuntu/Debian)
 
-Changes should be tested by somebody other than the developer who wrote the
-code. This is especially important for large or high-risk changes. It is useful
-to add a test plan to the pull request description if testing the changes is
-not straightforward.
+Install dependencies, then build:
 
+```bash
+sudo apt-get install build-essential libtool autotools-dev automake pkg-config \
+     bsdmainutils python3 libssl-dev libevent-dev libboost-all-dev \
+     libminiupnpc-dev libzmq3-dev libdb++-dev libqt5gui5 libqt5core5a \
+     libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler libqrencode-dev
 
-About BitQube
-----------------
-A digital peer to peer network for the facilitation of asset transfer.
+./autogen.sh
+./configure --with-tx
+make -j"$(nproc)"
+```
 
+> The wallet requires **Berkeley DB 4.8**. If your distro lacks it, either use
+> `contrib/install_db4.sh` or configure with `--with-incompatible-bdb`.
 
+### Portable (static) release binaries
 
-In the fictional world of Westeros, bitqubes are used as messengers who carry statements of truth. BitQube is a use case specific blockchain designed to carry statements of truth about who owns what assets. 
+To produce self-contained binaries that run on a bare server with no dependency
+installation (this is how release binaries are built), use the `depends` system:
 
+```bash
+cd depends
+make HOST=x86_64-pc-linux-gnu NO_QT=1 -j"$(nproc)"      # builds static deps
+cd ..
+./autogen.sh
+CONFIG_SITE=$PWD/depends/x86_64-pc-linux-gnu/share/config.site \
+    ./configure --prefix=/ --with-tx --without-gui
+make -j"$(nproc)"
+```
 
+The resulting `bitqubed` / `bitqube-cli` / `bitqube-tx` link their dependencies
+statically and require only `glibc`.
 
-Thank you to the Bitcoin developers. 
+## Mining
 
-The BitQube project is launched based on the hard work and continuous effort of over 400 Bitcoin developers who made over 14,000 commits over the life to date of the Bitcoin project. We are eternally grateful to you for your efforts and diligence in making a secure network and for their support of free and open source software development.  The BitQube experiment is made on the foundation you built.
+BitQube uses **KawPoW**, so standard KawPoW GPU miners (e.g. kawpowminer,
+T-Rex, NBMiner) work by pointing them at a `bitqubed` node or a pool. The low
+launch difficulty makes the first blocks CPU-mineable for bootstrapping.
 
+## Assets
 
-Abstract
-----------------
-BitQube aims to implement a blockchain which is optimized specifically for the use case of transferring assets such as securities from one holder to another. Based on the extensive development and testing of Bitcoin, BitQube is built on a fork of the Bitcoin code. Key changes include a faster block reward time and a change in the number, but not weighed distribution schedule, of coins. BitQube is free and open source and will be issued and mined transparently with no pre-mine, developer allocation or any other similar set aside. BitQube is intended to prioritize user control, privacy and censorship resistance and be jurisdiction agnostic while allowing simple optional additional features for users based on need.
+BitQube inherits Ravencoin's asset layer — issue, reissue, transfer, unique,
+restricted, and qualifier assets, plus messaging. Explore them via the
+`Create Assets` / `Manage Assets` tabs in the GUI or the `*asset*` RPCs.
 
+## License
 
+BitQube Core is released under the terms of the MIT license. See
+[COPYING](COPYING) or https://opensource.org/licenses/MIT.
 
-A blockchain is a ledger showing the value of something and allowing it to be transferred to someone else. Of all the possible uses for blockchains, the reporting of who owns what is one of the core uses of the technology.  This is why the first and most successful use case for blockchain technology to date has been Bitcoin.
+## Acknowledgements
 
-The success of the Ethereum ERC 20 token shows the demand for tokenized assets that use another blockchain.  Tokens offer many advantages to traditional shares or other participation mechanisms such as faster transfer, possibly increased user control and censorship resistance and reduction or elimination of the need for trusted third parties.
-
-Bitcoin also has the capability of serving as the rails for tokens by using projects such as Omnilayer, RSK or Counterparty. However, neither Bitcoin nor Ethereum was specifically designed for facilitating ownership of other assets. 
-
-BitQube is designed to be a use case specific blockchain designed to efficiently handle one specific function: the transfer of assets from one party to another.
-
-Bitcoin is and always should be focused on its goals of being a better form of money. Bitcoin developers will unlikely prioritize improvements or features which are specifically beneficial to the facilitation of token transfers.  One goal of the BitQube project is to see if a use case specific blockchain and development effort can create code which can either improve existing structures like Bitcoin or provide advantages for specific use cases.
-
-In the new global economy, borders and jurisdictions will be less relevant as more assets are tradable and trade across borders is increasingly frictionless. In an age where people can move significant amounts of wealth instantly using Bitcoin, global consumers will likely demand the same efficiency for their securities and similar asset holdings.
-
-For such a global system to work it will need to be independent of regulatory jurisdictions.  This is not due to ideological belief but practicality: if the rails for blockchain asset transfer are not censorship resistance and jurisdiction agnostic, any given jurisdiction may be in conflict with another.  In legacy systems, wealth was generally confined in the jurisdiction of the holder and therefore easy to control based on the policies of that jurisdiction. Because of the global nature of blockchain technology any protocol level ability to control wealth would potentially place jurisdictions in conflict and will not be able to operate fairly.  
-
+BitQube stands on the work of the Bitcoin and Ravencoin developers. Deep thanks
+to both communities for the secure, open-source foundation this project builds on.

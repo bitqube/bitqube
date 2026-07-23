@@ -1,13 +1,13 @@
 // Copyright (c) 2011-2016 The Bitcoin Core developers
-// Copyright (c) 2017-2019 The Raven Core developers
+// Copyright (c) 2017-2019 The BitQube Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef RAVEN_QT_PAYMENTSERVER_H
-#define RAVEN_QT_PAYMENTSERVER_H
+#ifndef BITQUBE_QT_PAYMENTSERVER_H
+#define BITQUBE_QT_PAYMENTSERVER_H
 
 // This class handles payment requests from clicking on
-// raven: URIs
+// bitqube: URIs
 //
 // This is somewhat tricky, because we have to deal with
 // the situation where the user clicks on a link during
@@ -146,4 +146,4 @@ private:
     OptionsModel *optionsModel;
 };
 
-#endif // RAVEN_QT_PAYMENTSERVER_H
+#endif // BITQUBE_QT_PAYMENTSERVER_H

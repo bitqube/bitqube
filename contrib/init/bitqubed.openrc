@@ -1,0 +1,92 @@
+#!/sbin/runscript
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/bitqube/.bitqube" ]; then
+	BITQUBED_DEFAULT_DATADIR="/var/lib/bitqube/.bitqube"
+else
+	BITQUBED_DEFAULT_DATADIR="/var/lib/bitqubed"
+fi
+
+BITQUBED_CONFIGFILE=${BITQUBED_CONFIGFILE:-/etc/bitqube/bitqube.conf}
+BITQUBED_PIDDIR=${BITQUBED_PIDDIR:-/var/run/bitqubed}
+BITQUBED_PIDFILE=${BITQUBED_PIDFILE:-${BITQUBED_PIDDIR}/bitqubed.pid}
+BITQUBED_DATADIR=${BITQUBED_DATADIR:-${BITQUBED_DEFAULT_DATADIR}}
+BITQUBED_USER=${BITQUBED_USER:-${BITQUBE_USER:-bitqube}}
+BITQUBED_GROUP=${BITQUBED_GROUP:-bitqube}
+BITQUBED_BIN=${BITQUBED_BIN:-/usr/bin/bitqubed}
+BITQUBED_NICE=${BITQUBED_NICE:-${NICELEVEL:-0}}
+BITQUBED_OPTS="${BITQUBED_OPTS:-${BITQUBE_OPTS}}"
+
+name="BitQube Core Daemon"
+description="BitQube cryptocurrency P2P network daemon"
+
+command="/usr/bin/bitqubed"
+command_args="-pid=\"${BITQUBED_PIDFILE}\" \
+		-conf=\"${BITQUBED_CONFIGFILE}\" \
+		-datadir=\"${BITQUBED_DATADIR}\" \
+		-daemon \
+		${BITQUBED_OPTS}"
+
+required_files="${BITQUBED_CONFIGFILE}"
+start_stop_daemon_args="-u ${BITQUBED_USER} \
+			-N ${BITQUBED_NICE} -w 2000"
+pidfile="${BITQUBED_PIDFILE}"
+
+# The retry schedule to use when stopping the daemon. Could be either
+# a timeout in seconds or multiple signal/timeout pairs (like
+# "SIGKILL/180 SIGTERM/300")
+retry="${BITQUBED_SIGTERM_TIMEOUT}"
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${BITQUBED_USER}:${BITQUBED_GROUP}" \
+	"${BITQUBED_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${BITQUBED_USER}:${BITQUBED_GROUP}" \
+	"${BITQUBED_PIDDIR}"
+
+	checkpath -f \
+	-o ${BITQUBED_USER}:${BITQUBED_GROUP} \
+	-m 0660 \
+	${BITQUBED_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${BITQUBED_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run bitqubed."
+		eerror "The setting must appear in ${BITQUBED_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following "
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"BitQube Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}

@@ -1,0 +1,8 @@
+/usr/bin/bitqube-cli		--	gen_context(system_u:object_r:bitqube_exec_t,s0)
+/usr/sbin/bitqubed		--	gen_context(system_u:object_r:bitqube_exec_t,s0)
+/usr/lib(64)?/bitqube/bitqubed		--	gen_context(system_u:object_r:bitqube_exec_t,s0)
+
+/etc/bitqube(/.*)?		gen_context(system_u:object_r:bitqube_conf_t,s0)
+/var/lib/bitqube(/.*)?		gen_context(system_u:object_r:bitqube_var_lib_t,s0)
+
+(/var)?/run/bitqubed(/.*)?   gen_context(system_u:object_r:bitqube_var_run_t,s0)

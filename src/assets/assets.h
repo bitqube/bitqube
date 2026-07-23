@@ -1,10 +1,10 @@
-// Copyright (c) 2017-2021 The Raven Core developers
+// Copyright (c) 2017-2021 The BitQube Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 
-#ifndef RAVENCOIN_ASSET_PROTOCOL_H
-#define RAVENCOIN_ASSET_PROTOCOL_H
+#ifndef BITQUBE_ASSET_PROTOCOL_H
+#define BITQUBE_ASSET_PROTOCOL_H
 
 #include "amount.h"
 #include "tinyformat.h"
@@ -16,12 +16,12 @@
 #include <unordered_map>
 #include <list>
 
-#define RVN_R 114
-#define RVN_V 118
-#define RVN_N 110
-#define RVN_Q 113
-#define RVN_T 116
-#define RVN_O 111
+#define BTQ_R 114
+#define BTQ_V 118
+#define BTQ_N 110
+#define BTQ_Q 113
+#define BTQ_T 116
+#define BTQ_O 111
 
 #define DEFAULT_UNITS 0
 #define DEFAULT_REISSUABLE 1
@@ -463,10 +463,10 @@ bool CheckIssueBurnTx(const CTxOut& txOut, const AssetType& type);
 bool CheckReissueBurnTx(const CTxOut& txOut);
 
 //! issue asset scripts to make sure script meets the standards
-bool CheckIssueDataTx(const CTxOut& txOut); // OP_RAVEN_ASSET RVNQ (That is a Q as in Que not an O)
-bool CheckOwnerDataTx(const CTxOut& txOut);// OP_RAVEN_ASSET RVNO
-bool CheckReissueDataTx(const CTxOut& txOut);// OP_RAVEN_ASSET RVNR
-bool CheckTransferOwnerTx(const CTxOut& txOut);// OP_RAVEN_ASSET RVNT
+bool CheckIssueDataTx(const CTxOut& txOut); // OP_BITQUBE_ASSET BTQQ (That is a Q as in Que not an O)
+bool CheckOwnerDataTx(const CTxOut& txOut);// OP_BITQUBE_ASSET BTQO
+bool CheckReissueDataTx(const CTxOut& txOut);// OP_BITQUBE_ASSET BTQR
+bool CheckTransferOwnerTx(const CTxOut& txOut);// OP_BITQUBE_ASSET BTQT
 
 //! Check the Encoded hash and make sure it is either an IPFS hash or a OIP hash
 bool CheckEncoded(const std::string& hash, std::string& strError);
@@ -579,4 +579,4 @@ bool ContextualCheckReissueAsset(CAssetsCache* assetCache, const CReissueAsset& 
 bool ContextualCheckUniqueAssetTx(CAssetsCache* assetCache, std::string& strError, const CTransaction& tx);
 bool ContextualCheckUniqueAsset(CAssetsCache* assetCache, const CNewAsset& unique_asset, std::string& strError);
 
-#endif //RAVENCOIN_ASSET_PROTOCOL_H
+#endif //BITQUBE_ASSET_PROTOCOL_H

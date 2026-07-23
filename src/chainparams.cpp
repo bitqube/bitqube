@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2016 The Bitcoin Core developers
-// Copyright (c) 2017-2021 The Raven Core developers
+// Copyright (c) 2017-2021 The BitQube Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -54,10 +54,41 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
  */
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-    const char* pszTimestamp = "The Times 03/Jan/2018 Bitcoin is name of the game for new generation of firms";
+    const char* pszTimestamp = "Key Democratic lawmakers say crypto Clarity Act 'falls short' on ethics, other issues";
     const CScript genesisOutputScript = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
+
+#ifdef MINE_GENESIS
+// BitQube: one-shot genesis miner. Compile with -DMINE_GENESIS, run bitqubed for each
+// network (mainnet / -testnet / -regtest); it prints the nonce, genesis hash and merkle
+// root, then exits. Bake the printed values into the CreateGenesisBlock() calls and the
+// asserts below, then rebuild WITHOUT -DMINE_GENESIS.
+#include <cstdio>
+#include <cstdlib>
+static void MineGenesis(CBlock& genesis, uint32_t nBits, const char* net)
+{
+    arith_uint256 target;
+    bool fNeg, fOver;
+    target.SetCompact(nBits, &fNeg, &fOver);
+    printf("\n[BitQube genesis miner] network=%s target=%s\n", net, target.GetHex().c_str());
+    for (uint32_t nonce = 0; ; nonce++) {
+        genesis.nNonce = nonce;
+        uint256 hash = genesis.GetX16RHash();
+        if (UintToArith256(hash) <= target) {
+            printf("[BitQube genesis miner] FOUND net=%s\n", net);
+            printf("    nTime  = %u\n", genesis.nTime);
+            printf("    nBits  = 0x%08x\n", genesis.nBits);
+            printf("    nonce  = %u\n", nonce);
+            printf("    hash   = %s\n", hash.GetHex().c_str());
+            printf("    merkle = %s\n\n", genesis.hashMerkleRoot.GetHex().c_str());
+            fflush(stdout);
+            exit(0);
+        }
+        if ((nonce & 0x3fffff) == 0) { printf("  ...net=%s nonce=%u\n", net, nonce); fflush(stdout); }
+    }
+}
+#endif
 
 void CChainParams::UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout)
 {
@@ -123,14 +154,16 @@ public:
         consensus.nBIP66Enabled = true;
         consensus.nSegwitEnabled = true;
         consensus.nCSVEnabled = true;
-        consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.kawpowLimit = uint256S("0000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // Estimated starting diff for first 180 kawpow blocks
+        // BitQube: low launch difficulty so the first blocks are CPU-mineable (see nCPUMiningEpochBlocks).
+        consensus.powLimit = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.kawpowLimit = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // Matches powLimit for a smooth launch
         consensus.nPowTargetTimespan = 2016 * 60; // 1.4 days
         consensus.nPowTargetSpacing = 1 * 60;
 		consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1613; // Approx 80% of 2016
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nCPUMiningEpochBlocks = 5000; // First 5,000 blocks pinned to powLimit (CPU-mineable launch)
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
@@ -163,45 +196,46 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].nOverrideMinerConfirmationWindow = 2016;
 
 
-        // The best chain should have at least this much work
-        consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000355cd0ac1503c83052"); // Block 2383567
+        // The best chain should have at least this much work (fresh BitQube chain).
+        consensus.nMinimumChainWork = uint256S("0x00");
 
-        // By default assume that the signatures in ancestors of this block are valid. Block# 1040000
-        consensus.defaultAssumeValid = uint256S("0x0000000000018d2fdcf4ac8eaac8db059584bd2840be5629562bb8599d39998c"); // Block 2383560
+        // By default assume that the signatures in ancestors of this block are valid (fresh chain).
+        consensus.defaultAssumeValid = uint256S("0x00");
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 32-bit integer with any alignment.
          */
-        pchMessageStart[0] = 0x52; // R
-        pchMessageStart[1] = 0x41; // A
-        pchMessageStart[2] = 0x56; // V
-        pchMessageStart[3] = 0x4e; // N
-        nDefaultPort = 8767;
+        pchMessageStart[0] = 0x42; // B
+        pchMessageStart[1] = 0x54; // T
+        pchMessageStart[2] = 0x51; // Q
+        pchMessageStart[3] = 0x4d; // M (mainnet)
+        nDefaultPort = 8851;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1514999494, 25023712, 0x1e00ffff, 4, 5000 * COIN);
-
+        genesis = CreateGenesisBlock(1784752134, 150274, 0x1f00ffff, 4, 0);
         consensus.hashGenesisBlock = genesis.GetX16RHash();
+#ifdef MINE_GENESIS
+        MineGenesis(genesis, 0x1f00ffff, "main");
+#endif
 
-        assert(consensus.hashGenesisBlock == uint256S("0000006b444bc2f2ffe627be9d9e7e7a0730000870ef6eb6da46c8eae389df90"));
-        assert(genesis.hashMerkleRoot == uint256S("28ff00a867739a352523808d301f504bc4547699398d70faf2266a8bae5f3516"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0000c9dc1810a24d2454bfa24aa07f0ff0288445f2fe64f2284f321b1063fccb"));
+        assert(genesis.hashMerkleRoot == uint256S("0xfaa3fbf62298c6480f0975b612ddf7200d5e122f586952c6d9ae8c592b3ab716"));
 
-        vSeeds.emplace_back("seed-raven.bitactivate.com", false);
-        vSeeds.emplace_back("seed-raven.ravencoin.com", false);
-        vSeeds.emplace_back("seed-raven.ravencoin.org", false);
+        vSeeds.emplace_back("seed.bitqube.org", false);
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,60);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,122);
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,128);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,25);   // 'B'
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,85);   // 'b'
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,153);  // WIF
         base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x88, 0xB2, 0x1E};
         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x88, 0xAD, 0xE4};
 
-        // Raven BIP44 cointype in mainnet is '175'
-        nExtCoinType = 175;
+        // BitQube BIP44 cointype in mainnet
+        nExtCoinType = 8851;
 
-        vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_main, pnSeed6_main + ARRAYLEN(pnSeed6_main));
+        // BitQube: bootstrap via the DNS seed (seed.bitqube.org -> 5.78.82.123). No stale fixed seeds.
+        vFixedSeeds.clear();
 
         fDefaultConsistencyChecks = false;
         fRequireStandard = true;
@@ -210,28 +244,18 @@ public:
 
         checkpointData = (CCheckpointData) {
             {
-                { 535721, uint256S("0x000000000001217f58a594ca742c8635ecaaaf695d1a63f6ab06979f1c159e04")},
-                { 697376, uint256S("0x000000000000499bf4ebbe61541b02e4692b33defc7109d8f12d2825d4d2dfa0")},
-                { 740000, uint256S("0x00000000000027d11bf1e7a3b57d3c89acc1722f39d6e08f23ac3a07e16e3172")},
-                { 909251, uint256S("0x000000000000694c9a363eff06518aa7399f00014ce667b9762f9a4e7a49f485")},
-                { 1040000, uint256S("0x000000000000138e2690b06b1ddd8cf158c3a5cf540ee5278debdcdffcf75839")},
-                { 1186833, uint256S("0x0000000000000d4840d4de1f7d943542c2aed532bd5d6527274fc0142fa1a410")},
-                { 2383550, uint256S("0x0000000000008927ed21a1e3bb87d3e1020646e8cc94354a1f8fc608395e15dc")}
+                // Fresh BitQube chain: checkpoints to be added as the chain grows.
             }
         };
 
-		// 20969961 transactions as of block #2383625 at 2022-07-28 22:02:22 (UTC)
-		// previously set at 6709969 txns by time 1577939273 ==>
         chainTxData = ChainTxData{
-            // Update as we know more about the contents of the Raven chain
-            // Stats as of 0x00000000000016ec03d8d93f9751323bcc42137b1b4df67e6a11c4394fd8e5ad window size 43200
-            1659045742, // * UNIX timestamp of last known number of transactions
-            20969961,    // * total number of transactions between genesis and that timestamp
-                        //   (the tx=... number in the SetBestChain debug.log lines)
-            5.7       // * estimated number of transactions per second after that timestamp
+            // Fresh BitQube chain: no transaction history yet.
+            0, // * UNIX timestamp of last known number of transactions
+            0, // * total number of transactions between genesis and that timestamp
+            0  // * estimated number of transactions per second after that timestamp
         };
 
-        /** RVN Start **/
+        /** BTQ Start **/
         // Burn Amounts
         nIssueAssetBurnAmount = 500 * COIN;
         nReissueAssetBurnAmount = 100 * COIN;
@@ -243,34 +267,37 @@ public:
         nIssueRestrictedAssetBurnAmount = 1500 * COIN;
         nAddNullQualifierTagBurnAmount = .1 * COIN;
 
-        // Burn Addresses
-        strIssueAssetBurnAddress = "RXissueAssetXXXXXXXXXXXXXXXXXhhZGt";
-        strReissueAssetBurnAddress = "RXReissueAssetXXXXXXXXXXXXXXVEFAWu";
-        strIssueSubAssetBurnAddress = "RXissueSubAssetXXXXXXXXXXXXXWcwhwL";
-        strIssueUniqueAssetBurnAddress = "RXissueUniqueAssetXXXXXXXXXXWEAe58";
-        strIssueMsgChannelAssetBurnAddress = "RXissueMsgChanneLAssetXXXXXXSjHvAY";
-        strIssueQualifierAssetBurnAddress = "RXissueQuaLifierXXXXXXXXXXXXUgEDbC";
-        strIssueSubQualifierAssetBurnAddress = "RXissueSubQuaLifierXXXXXXXXXVTzvv5";
-        strIssueRestrictedAssetBurnAddress = "RXissueRestrictedXXXXXXXXXXXXzJZ1q";
-        strAddNullQualifierTagBurnAddress = "RXaddTagBurnXXXXXXXXXXXXXXXXZQm5ya";
+        // Asset-issuance FEE addresses. BitQube collects these fees to the admin
+        // address (they are spendable, not burned). Provided by the project owner.
+        strIssueAssetBurnAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
+        strReissueAssetBurnAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
+        strIssueSubAssetBurnAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
+        strIssueUniqueAssetBurnAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
+        strIssueMsgChannelAssetBurnAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
+        strIssueQualifierAssetBurnAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
+        strIssueSubQualifierAssetBurnAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
+        strIssueRestrictedAssetBurnAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
+        strAddNullQualifierTagBurnAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
 
-            //Global Burn Address
-        strGlobalBurnAddress = "RXBurnXXXXXXXXXXXXXXXXXXXXXXWUo9FV";
+            // Global Burn Address (voluntary asset burning — kept unspendable, NOT the admin address)
+        strGlobalBurnAddress = "BSMoPz6SgDJruMeVfqsNZ8zzVsWWbr3eVY";
 
-        // DGW Activation
-        nDGWActivationBlock = 338778;
+        // DGW Activation (BitQube: retargeting takes over right after the CPU-mining epoch)
+        nDGWActivationBlock = 5000;
 
         nMaxReorganizationDepth = 60; // 60 at 1 minute block timespan is +/- 60 minutes.
         nMinReorganizationPeers = 4;
         nMinReorganizationAge = 60 * 60 * 12; // 12 hours
 
-        nAssetActivationHeight = 435456; // Asset activated block height
-        nMessagingActivationBlock = 1092672; // Messaging activated block height
-        nRestrictedActivationBlock = 1092672; // Restricted activated block height
+        nAssetActivationHeight = 1; // Assets active from launch
+        nMessagingActivationBlock = 1; // Messaging active from launch
+        nRestrictedActivationBlock = 1; // Restricted assets active from launch
 
-        nKAAAWWWPOWActivationTime = 1588788000; // UTC: Wed May 06 2020 18:00:00
+        // BitQube: KAWPOW active from launch (genesis time). Genesis itself is X16R-mined;
+        // every block after genesis uses KAWPOW.
+        nKAAAWWWPOWActivationTime = 1784752135; // genesis time + 1s: genesis stays X16R-mined, every later block is KAWPOW
         nKAWPOWActivationTime = nKAAAWWWPOWActivationTime;
-        /** RVN End **/
+        /** BTQ End **/
     }
 };
 
@@ -288,14 +315,16 @@ public:
         consensus.nSegwitEnabled = true;
         consensus.nCSVEnabled = true;
 
-        consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.kawpowLimit = uint256S("000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        // BitQube testnet: low launch difficulty, CPU-mineable (mirrors mainnet).
+        consensus.powLimit = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.kawpowLimit = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 2016 * 60; // 1.4 days
         consensus.nPowTargetSpacing = 1 * 60;
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1310; // Approx 65% for testchains
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nCPUMiningEpochBlocks = 5000; // First 5,000 blocks pinned to powLimit (CPU-mineable launch)
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
@@ -327,21 +356,21 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].nOverrideRuleChangeActivationThreshold = 1411; // Approx 70% of 2016
         consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].nOverrideMinerConfirmationWindow = 2016;
 
-        // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000000168050db560b4");
+        // The best chain should have at least this much work (fresh BitQube testnet).
+        consensus.nMinimumChainWork = uint256S("0x00");
 
-        // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x000000006272208605c4df3b54d4d5515759105e7ffcb258e8cd8077924ffef1");
+        // By default assume that the signatures in ancestors of this block are valid (fresh chain).
+        consensus.defaultAssumeValid = uint256S("0x00");
 
 
-        pchMessageStart[0] = 0x52; // R
-        pchMessageStart[1] = 0x56; // V
-        pchMessageStart[2] = 0x4E; // N
-        pchMessageStart[3] = 0x54; // T
-        nDefaultPort = 18770;
+        pchMessageStart[0] = 0x42; // B
+        pchMessageStart[1] = 0x54; // T
+        pchMessageStart[2] = 0x51; // Q
+        pchMessageStart[3] = 0x54; // T (testnet)
+        nDefaultPort = 18851;
         nPruneAfterHeight = 1000;
 
-        uint32_t nGenesisTime = 1537466400;  // Thursday, September 20, 2018 12:00:00 PM GMT-06:00
+        uint32_t nGenesisTime = 1784752134;  // 2026-07-22 20:28:54 UTC (BitQube genesis time)
 
         // This is used inorder to mine the genesis block. Once found, we can use the nonce and block hash found to create a valid genesis block
 //        /////////////////////////////////////////////////////////////////
@@ -404,19 +433,20 @@ public:
 
 //        /////////////////////////////////////////////////////////////////
 
-        genesis = CreateGenesisBlock(nGenesisTime, 15615880, 0x1e00ffff, 2, 5000 * COIN);
+        genesis = CreateGenesisBlock(nGenesisTime, 133152, 0x1f00ffff, 2, 0);
         consensus.hashGenesisBlock = genesis.GetX16RHash();
+#ifdef MINE_GENESIS
+        MineGenesis(genesis, 0x1f00ffff, "test");
+#endif
 
         //Test MerkleRoot and GenesisBlock
-        assert(consensus.hashGenesisBlock == uint256S("0x000000ecfc5e6324a079542221d00e10362bdc894d56500c414060eea8a3ad5a"));
-        assert(genesis.hashMerkleRoot == uint256S("28ff00a867739a352523808d301f504bc4547699398d70faf2266a8bae5f3516"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000052622ea82f1a64ea10bd5db7bbc4814ea7865f3d7ac22a9325215d57ae03"));
+        assert(genesis.hashMerkleRoot == uint256S("0xfaa3fbf62298c6480f0975b612ddf7200d5e122f586952c6d9ae8c592b3ab716"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
 
-        vSeeds.emplace_back("seed-testnet-raven.bitactivate.com", false);
-        vSeeds.emplace_back("seed-testnet-raven.ravencoin.com", false);
-        vSeeds.emplace_back("seed-testnet-raven.ravencoin.org", false);
+        vSeeds.emplace_back("seed-testnet.bitqube.org", false);
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
@@ -424,10 +454,11 @@ public:
         base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF};
         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
 
-        // Raven BIP44 cointype in testnet
+        // BitQube BIP44 cointype in testnet
         nExtCoinType = 1;
 
-        vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
+        // BitQube: bootstrap via the DNS seed (seed-testnet.bitqube.org). No stale fixed seeds.
+        vFixedSeeds.clear();
 
         fDefaultConsistencyChecks = false;
         fRequireStandard = false;
@@ -436,23 +467,18 @@ public:
 
         checkpointData = (CCheckpointData) {
             {
-                    { 225, uint256S("0x000003465e3e0167322eb8269ce91246bbc211e293bc5fbf6f0a0d12c1ccb363")},
-                    {223408, uint256S("0x000000012a0c09dd6456ab19018cc458648dec762b04f4ddf8ef8108eae69db9")},
-                    {232980, uint256S("0x000000007b16ae547fce76c3308dbeec2090cde75de74ab5dfcd6f60d13f089b")},
-                    {257610, uint256S("0x000000006272208605c4df3b54d4d5515759105e7ffcb258e8cd8077924ffef1")}
+                // Fresh BitQube testnet: checkpoints to be added as the chain grows.
             }
         };
 
         chainTxData = ChainTxData{
-            // Update as we know more about the contents of the Raven chain
-            // Stats as of 00000023b66f46d74890287a7b1157dd780c7c5fdda2b561eb96684d2b39d62e window size 43200
-            1543633332, // * UNIX timestamp of last known number of transactions
-            146666,     // * total number of transactions between genesis and that timestamp
-                        //   (the tx=... number in the SetBestChain debug.log lines)
-            0.02        // * estimated number of transactions per second after that timestamp
+            // Fresh BitQube testnet: no transaction history yet.
+            0, // * UNIX timestamp of last known number of transactions
+            0, // * total number of transactions between genesis and that timestamp
+            0  // * estimated number of transactions per second after that timestamp
         };
 
-        /** RVN Start **/
+        /** BTQ Start **/
         // Burn Amounts
         nIssueAssetBurnAmount = 500 * COIN;
         nReissueAssetBurnAmount = 100 * COIN;
@@ -478,20 +504,21 @@ public:
         // Global Burn Address
         strGlobalBurnAddress = "n1BurnXXXXXXXXXXXXXXXXXXXXXXU1qejP";
 
-        // DGW Activation
-        nDGWActivationBlock = 1;
+        // DGW Activation (BitQube testnet: retargeting takes over after the CPU-mining epoch)
+        nDGWActivationBlock = 5000;
 
         nMaxReorganizationDepth = 60; // 60 at 1 minute block timespan is +/- 60 minutes.
         nMinReorganizationPeers = 4;
         nMinReorganizationAge = 60 * 60 * 12; // 12 hours
 
-        nAssetActivationHeight = 6048; // Asset activated block height
-        nMessagingActivationBlock = 10080; // Messaging activated block height
-        nRestrictedActivationBlock = 10080; // Restricted activated block height
+        nAssetActivationHeight = 1; // Assets active from launch
+        nMessagingActivationBlock = 1; // Messaging active from launch
+        nRestrictedActivationBlock = 1; // Restricted assets active from launch
 
-        nKAAAWWWPOWActivationTime = 1585159200; //Wed Mar 25 2020 18:00:00 UTC
+        // BitQube: KAWPOW active from launch (genesis time). Genesis itself is X16R-mined.
+        nKAAAWWWPOWActivationTime = 1784752135; // genesis time + 1s: genesis stays X16R-mined, every later block is KAWPOW
         nKAWPOWActivationTime = nKAAAWWWPOWActivationTime;
-        /** RVN End **/
+        /** BTQ End **/
     }
 };
 
@@ -516,6 +543,7 @@ public:
         consensus.fPowNoRetargeting = true;
         consensus.nRuleChangeActivationThreshold = 108; // 75% for testchains
         consensus.nMinerConfirmationWindow = 144; // Faster than normal for regtest (144 instead of 2016)
+        consensus.nCPUMiningEpochBlocks = 0; // No CPU-mining epoch pin for regtest
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 999999999999ULL;
@@ -553,10 +581,10 @@ public:
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x00");
 
-        pchMessageStart[0] = 0x43; // C
-        pchMessageStart[1] = 0x52; // R
-        pchMessageStart[2] = 0x4F; // O
-        pchMessageStart[3] = 0x57; // W
+        pchMessageStart[0] = 0x42; // B
+        pchMessageStart[1] = 0x54; // T
+        pchMessageStart[2] = 0x51; // Q
+        pchMessageStart[3] = 0x52; // R (regtest)
         nDefaultPort = 18444;
         nPruneAfterHeight = 1000;
 
@@ -621,11 +649,14 @@ public:
 //        /////////////////////////////////////////////////////////////////
 
 
-        genesis = CreateGenesisBlock(1524179366, 1, 0x207fffff, 4, 5000 * COIN);
+        genesis = CreateGenesisBlock(1784752134, 0, 0x207fffff, 4, 0);
         consensus.hashGenesisBlock = genesis.GetX16RHash();
+#ifdef MINE_GENESIS
+        MineGenesis(genesis, 0x207fffff, "regtest");
+#endif
 
-        assert(consensus.hashGenesisBlock == uint256S("0x0b2c703dc93bb63a36c4e33b85be4855ddbca2ac951a7a0a29b8de0408200a3c "));
-        assert(genesis.hashMerkleRoot == uint256S("0x28ff00a867739a352523808d301f504bc4547699398d70faf2266a8bae5f3516"));
+        assert(consensus.hashGenesisBlock == uint256S("0x01b98cac4971b7e97b1f7dc42adc21515f1260c6f86962a4e2347e275cb2490d"));
+        assert(genesis.hashMerkleRoot == uint256S("0xfaa3fbf62298c6480f0975b612ddf7200d5e122f586952c6d9ae8c592b3ab716"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.
@@ -651,10 +682,10 @@ public:
         base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF};
         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
 
-        // Raven BIP44 cointype in regtest
+        // BitQube BIP44 cointype in regtest
         nExtCoinType = 1;
 
-        /** RVN Start **/
+        /** BTQ Start **/
         // Burn Amounts
         nIssueAssetBurnAmount = 500 * COIN;
         nReissueAssetBurnAmount = 100 * COIN;
@@ -696,7 +727,7 @@ public:
         // If you are looking to test the kawpow hashing function in regtest. You will need to change this number
         nKAAAWWWPOWActivationTime = 3582830167;
         nKAWPOWActivationTime = nKAAAWWWPOWActivationTime;
-        /** RVN End **/
+        /** BTQ End **/
     }
 };
 

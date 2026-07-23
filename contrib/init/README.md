@@ -1,11 +1,11 @@
 Sample configuration files for:
 ```
-SystemD: ravend.service
-Upstart: ravend.conf
-OpenRC:  ravend.openrc
-         ravend.openrcconf
-CentOS:  ravend.init
-OS X:    org.raven.ravend.plist
+SystemD: bitqubed.service
+Upstart: bitqubed.conf
+OpenRC:  bitqubed.openrc
+         bitqubed.openrcconf
+CentOS:  bitqubed.init
+OS X:    org.bitqube.bitqubed.plist
 ```
 have been made available to assist packagers in creating node packages here.
 

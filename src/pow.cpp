@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2016 The Bitcoin Core developers
-// Copyright (c) 2017-2020 The Raven Core developers
+// Copyright (c) 2017-2020 The BitQube Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -140,6 +140,12 @@ unsigned int GetNextWorkRequiredBTC(const CBlockIndex* pindexLast, const CBlockH
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
 //    int64_t nPrevBlockTime = (pindexLast->pprev ? pindexLast->pprev->GetBlockTime() : pindexLast->GetBlockTime());  //<- Commented out - fixes "not used" warning
+
+    // BitQube: keep the first nCPUMiningEpochBlocks blocks at the minimum (powLimit)
+    // difficulty so the launch phase can be mined on CPU regardless of block timing.
+    if (params.nCPUMiningEpochBlocks > 0 && pindexLast->nHeight + 1 <= params.nCPUMiningEpochBlocks) {
+        return UintToArith256(params.powLimit).GetCompact();
+    }
 
     if (IsDGWActive(pindexLast->nHeight + 1)) {
 //        LogPrint(BCLog::NET, "Block %s - version: %s: found next work required using DGW: [%s] (BTC would have been [%s]\t(%+d)\t(%0.3f%%)\t(%s sec))\n",

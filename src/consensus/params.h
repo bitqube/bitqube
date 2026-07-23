@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2016 The Bitcoin Core developers
-// Copyright (c) 2017-2021 The Raven Core developers
+// Copyright (c) 2017-2021 The BitQube Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef RAVEN_CONSENSUS_PARAMS_H
-#define RAVEN_CONSENSUS_PARAMS_H
+#ifndef BITQUBE_CONSENSUS_PARAMS_H
+#define BITQUBE_CONSENSUS_PARAMS_H
 
 #include "uint256.h"
 #include <map>
@@ -73,6 +73,10 @@ struct Params {
     bool fPowNoRetargeting;
     int64_t nPowTargetSpacing;
     int64_t nPowTargetTimespan;
+    /** BitQube: number of initial blocks pinned to the minimum (powLimit) difficulty
+     *  so the launch phase is CPU-mineable. Blocks with height <= this value use the
+     *  difficulty floor; afterwards normal retargeting (DGW) applies. 0 disables. */
+    int nCPUMiningEpochBlocks;
     int64_t DifficultyAdjustmentInterval() const { return nPowTargetTimespan / nPowTargetSpacing; }
     uint256 nMinimumChainWork;
     uint256 defaultAssumeValid;
@@ -81,4 +85,4 @@ struct Params {
 };
 } // namespace Consensus
 
-#endif // RAVEN_CONSENSUS_PARAMS_H
+#endif // BITQUBE_CONSENSUS_PARAMS_H

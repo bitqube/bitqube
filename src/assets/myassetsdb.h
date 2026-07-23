@@ -1,9 +1,9 @@
-// Copyright (c) 2019 The Raven Core developers
+// Copyright (c) 2019 The BitQube Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef RAVENCOIN_MYASSETSDB_H
-#define RAVENCOIN_MYASSETSDB_H
+#ifndef BITQUBE_MYASSETSDB_H
+#define BITQUBE_MYASSETSDB_H
 
 #include <dbwrapper.h>
 
@@ -79,4 +79,4 @@ public:
 };
 
 
-#endif //RAVENCOIN_MYASSETSDB_H
+#endif //BITQUBE_MYASSETSDB_H

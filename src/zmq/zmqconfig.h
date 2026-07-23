@@ -1,13 +1,13 @@
 // Copyright (c) 2014 The Bitcoin Core developers
-// Copyright (c) 2017-2019 The Raven Core developers
+// Copyright (c) 2017-2019 The BitQube Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef RAVEN_ZMQ_ZMQCONFIG_H
-#define RAVEN_ZMQ_ZMQCONFIG_H
+#ifndef BITQUBE_ZMQ_ZMQCONFIG_H
+#define BITQUBE_ZMQ_ZMQCONFIG_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/raven-config.h"
+#include "config/bitqube-config.h"
 #endif
 
 #include <stdarg.h>
@@ -22,4 +22,4 @@
 
 void zmqError(const char *str);
 
-#endif // RAVEN_ZMQ_ZMQCONFIG_H
+#endif // BITQUBE_ZMQ_ZMQCONFIG_H

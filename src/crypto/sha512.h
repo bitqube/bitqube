@@ -1,10 +1,10 @@
 // Copyright (c) 2014-2016 The Bitcoin Core developers
-// Copyright (c) 2017-2019 The Raven Core developers
+// Copyright (c) 2017-2019 The BitQube Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef RAVEN_CRYPTO_SHA512_H
-#define RAVEN_CRYPTO_SHA512_H
+#ifndef BITQUBE_CRYPTO_SHA512_H
+#define BITQUBE_CRYPTO_SHA512_H
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -26,4 +26,4 @@ public:
     CSHA512& Reset();
 };
 
-#endif // RAVEN_CRYPTO_SHA512_H
+#endif // BITQUBE_CRYPTO_SHA512_H

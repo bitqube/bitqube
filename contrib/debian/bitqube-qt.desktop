@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=BitQube Core
+Comment=Connect to the BitQube P2P Network
+Comment[de]=Verbinde mit dem BitQube peer-to-peer Netzwerk
+Comment[fr]=BitQube, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=BitQube, eşten eşe kriptografik sanal para birimi
+Exec=bitqube-qt %u
+Terminal=false
+Type=Application
+Icon=bitqube128
+MimeType=x-scheme-handler/bitqube;
+Categories=Office;Finance;

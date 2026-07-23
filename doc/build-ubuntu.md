@@ -1,4 +1,4 @@
-Build instructions for Ravencoin 
+Build instructions for BitQube 
 =================================
 
 This will install most of the dependencies from ubuntu.
@@ -130,12 +130,12 @@ protobuf-compiler
 
 Directory structure
 ------------------
-Ravencoin sources in `$HOME/src`
+BitQube sources in `$HOME/src`
 
 Berkeley DB will be installed to `$HOME/src/db4`
 
 
-Ravencoin
+BitQube
 ------------------
 
 Start in $HOME
@@ -146,11 +146,11 @@ Make the directory for sources and go into it.
 
 `cd src`
 
-__Download Ravencoin source.__
+__Download BitQube source.__
 
-`git clone https://github.com/RavenProject/Ravencoin`
+`git clone https://github.com/BitQubeProject/BitQube`
 
-`cd Ravencoin`
+`cd BitQube`
 
 `git checkout develop` # this checks out the develop branch.
 
@@ -171,11 +171,11 @@ _Adjust to own needs. This will install the binaries to `/usr/local/bin`_
 
 `make -j8`  # 8 for 8 build threads, adjust to fit your setup.
 
-You can now start raven-qt from the build directory.
+You can now start bitqube-qt from the build directory.
 
-`src/qt/raven-qt`
+`src/qt/bitqube-qt`
 
-ravend and raven-cli are in `src/`
+bitqubed and bitqube-cli are in `src/`
 
 
 __Optional:__

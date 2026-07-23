@@ -1,0 +1,33 @@
+# /etc/conf.d/bitqubed: config file for /etc/init.d/bitqubed
+
+# Config file location
+#BITQUBED_CONFIGFILE="/etc/bitqube/bitqube.conf"
+
+# What directory to write pidfile to?  (created and owned by $BITQUBED_USER)
+#BITQUBED_PIDDIR="/var/run/bitqubed"
+
+# What filename to give the pidfile
+#BITQUBED_PIDFILE="${BITQUBED_PIDDIR}/bitqubed.pid"
+
+# Where to write bitqubed data (be mindful that the blockchain is large)
+#BITQUBED_DATADIR="/var/lib/bitqubed"
+
+# User and group to own bitqubed process
+#BITQUBED_USER="bitqube"
+#BITQUBED_GROUP="bitqube"
+
+# Path to bitqubed executable
+#BITQUBED_BIN="/usr/bin/bitqubed"
+
+# Nice value to run bitqubed under
+#BITQUBED_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#BITQUBED_OPTS=""
+
+# The timeout in seconds OpenRC will wait for bitqubed to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+BITQUBED_SIGTERM_TIMEOUT=60

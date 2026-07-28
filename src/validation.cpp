@@ -5809,6 +5809,15 @@ bool AreAssetsDeployed()
     if (fAssetsIsActive)
         return true;
 
+    // BitQube: height-gated activation. The inherited Ravencoin BIP9 window
+    // (Oct 2018 - Oct 2019) predates this chain and can never lock in, so assets
+    // turn on at nAssetActivationHeight (set in chainparams) instead of by miner
+    // signaling. The BIP9 check below is kept only as a fallback.
+    if (chainActive.Tip() != nullptr && chainActive.Height() >= GetParams().GetAssetActivationHeight()) {
+        fAssetsIsActive = true;
+        return true;
+    }
+
     const ThresholdState thresholdState = VersionBitsTipState(GetParams().GetConsensus(), Consensus::DEPLOYMENT_ASSETS);
     if (thresholdState == THRESHOLD_ACTIVE)
         fAssetsIsActive = true;
@@ -5820,6 +5829,14 @@ bool IsRip5Active()
 {
     if (fRip5IsActive)
         return true;
+
+    // BitQube: height-gated activation at the same height as basic assets. Turns
+    // on RIP5 (unique assets, restricted assets, messaging) at nAssetActivationHeight
+    // since the inherited BIP9 window is dead. BIP9 check kept as a fallback.
+    if (chainActive.Tip() != nullptr && chainActive.Height() >= GetParams().GetAssetActivationHeight()) {
+        fRip5IsActive = true;
+        return true;
+    }
 
     const ThresholdState thresholdState = VersionBitsTipState(GetParams().GetConsensus(), Consensus::DEPLOYMENT_MSG_REST_ASSETS);
     if (thresholdState == THRESHOLD_ACTIVE)

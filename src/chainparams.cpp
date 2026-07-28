@@ -294,7 +294,7 @@ public:
         nMinReorganizationPeers = 4;
         nMinReorganizationAge = 60 * 60 * 12; // 12 hours
 
-        nAssetActivationHeight = 1; // Assets active from launch
+        nAssetActivationHeight = 6700; // BitQube: all asset features activate at this height. The inherited Ravencoin BIP9 window (2018-2019) is dead, so activation is height-gated in AreAssetsDeployed()/IsRip5Active() rather than by miner signaling.
         nMessagingActivationBlock = 1; // Messaging active from launch
         nRestrictedActivationBlock = 1; // Restricted assets active from launch
 

@@ -245,15 +245,19 @@ public:
 
         checkpointData = (CCheckpointData) {
             {
-                // Fresh BitQube chain: checkpoints to be added as the chain grows.
+                {101,  uint256S("000000227a0fed44fa45813f5c1c473fbbe04d595632d3fa688e1dc3be3b30a4")},
+                {111,  uint256S("0000000163f1c8ca7600ebe2abefe8f4cf69250baf0f55ec3df045fc9a500d27")},
+                {999,  uint256S("000000118cbad8c39d46b6377f96af001df042db921e214f439aa818f2c46d82")},
+                {2222, uint256S("00000026b94b3127f4a8b517bf1835c8a4a5ed231dea09ecce6fe1fd16babf85")},
+                {6592, uint256S("000000011d699894c1e368b633ebc51f5a261d5ec041c2f8bf7bb631a0df0f94")},
             }
         };
 
         chainTxData = ChainTxData{
-            // Fresh BitQube chain: no transaction history yet.
-            0, // * UNIX timestamp of last known number of transactions
-            0, // * total number of transactions between genesis and that timestamp
-            0  // * estimated number of transactions per second after that timestamp
+            // Data from getchaintxstats at block 6592
+            1785240384, // * UNIX timestamp of last known number of transactions
+            7071,       // * total number of transactions between genesis and that timestamp
+            0.0179      // * estimated number of transactions per second after that timestamp
         };
 
         /** BTQ Start **/

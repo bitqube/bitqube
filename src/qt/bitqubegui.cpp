@@ -597,10 +597,10 @@ void BitQubeGUI::createToolBars()
         labelToolbar->setAlignment(Qt::AlignLeft);
 
         if(IconsOnly) {
-            labelToolbar->setPixmap(QPixmap::fromImage(QImage(":/icons/rvntext")));
+            labelToolbar->setPixmap(QPixmap::fromImage(QImage(":/icons/bitqube")).scaledToWidth(40, Qt::SmoothTransformation));
         }
         else {
-            labelToolbar->setPixmap(QPixmap::fromImage(QImage(":/icons/bitqubetext")));
+            labelToolbar->setPixmap(QPixmap::fromImage(QImage(":/icons/bitqube")).scaledToWidth(150, Qt::SmoothTransformation));
         }
         labelToolbar->setStyleSheet(".QLabel{background-color: transparent;}");
 

@@ -13,6 +13,9 @@ the full asset/token layer while introducing BitQube's own economics, network,
 and branding.
 
 - **Website:** https://bitqube.org
+- **Block explorer:** https://explorer.bitqube.org
+- **Mining pool:** `stratum+tcp://5.78.79.98:10032` (KawPoW)
+- **Source:** https://github.com/bitqube/bitqube
 - **Consensus:** Proof of Work — **KawPoW** (GPU-friendly, ASIC-resistant)
 - **Block time:** 1 minute
 - **Max supply:** 8,000,000 BTQ (fixed — no inflation after emission ends)
@@ -61,32 +64,92 @@ Block **1** additionally mints the **641,600 BTQ Ecosystem Reserve** premine
 
 ---
 
+## Consensus & activation heights
+
+BitQube is Proof-of-Work (**KawPoW**) with Dark Gravity Wave difficulty
+retargeting and hard-coded block checkpoints. Consensus-critical mainnet
+activation heights:
+
+| Feature | Height | Notes |
+|---|---|---|
+| Low-difficulty bootstrap floor | 0 – 5,000 | CPU-mineable launch window |
+| Asset layer (issue / reissue / transfer / unique / restricted / qualifier / messaging) | **6,700** | assets become active |
+| Asset issuance-fee reduction | **8,400** | fees drop to the reduced schedule below |
+
+### Asset issuance fees
+
+Issuing an asset burns a fee to the network fee address. The fee change is
+**height-gated** so the pre-8,400 chain history stays valid: below block 8,400
+the original (higher) fees applied; from block **8,400** onward the reduced
+fees below apply.
+
+| Operation | Fee (BTQ) |
+|---|---|
+| Issue main asset | 5 |
+| Issue sub-asset | 1 |
+| Issue unique asset | 0.1 |
+| Reissue | 1 |
+| Messaging channel | 1 |
+| Qualifier | 10 |
+| Sub-qualifier | 1 |
+| Restricted asset | 20 |
+| Add null-qualifier tag | 0.01 |
+
+> **Node operators:** the fee reduction is a consensus rule. Every node (seed
+> nodes, pool, wallets) must run **v1.1.0 or later** before block 8,400, and no
+> new asset should be issued until all nodes are upgraded — a fee mismatch
+> between old and new nodes will fork the chain.
+
+---
+
 ## Binaries
 
 BitQube ships the standard Bitcoin/Ravencoin binary set:
 
 - `bitqubed` — full node daemon
 - `bitqube-cli` — RPC command-line client
-- `bitqube-tx` — transaction construction utility
 - `bitqube-qt` — desktop wallet (GUI)
 
-## Running a node
+## Running a daemon
 
-```bash
-# start the daemon
-bitqubed -daemon
+The data directory is `~/.bitqube` (created on first run). Network defaults:
 
-# basic queries
-bitqube-cli getblockchaininfo
-bitqube-cli getpeerinfo
+| | Mainnet | Testnet |
+|---|---|---|
+| P2P port | 8851 | 18851 |
+| RPC port | 8766 | 18766 |
 
-# a wallet address (starts with 'B')
-bitqube-cli getnewaddress
+**1. Create `~/.bitqube/bitqube.conf`:**
+
+```ini
+# run as a background daemon
+daemon=1
+# accept RPC from the CLI on this machine
+server=1
+rpcuser=changeThisUser
+rpcpassword=changeThisToALongRandomSecret
+# uncomment to accept inbound connections and help the network
+# listen=1
+# (optional) index every transaction, needed by explorers
+# txindex=1
 ```
 
-To help the network, run a listening node with **TCP port 8851** open to the
-internet. New nodes bootstrap from `seed.bitqube.org` plus the hardcoded fixed
-seeds.
+**2. Start it and check status:**
+
+```bash
+bitqubed -daemon                     # start in the background
+bitqube-cli getblockchaininfo        # sync status / height
+bitqube-cli getpeerinfo              # connected peers
+bitqube-cli getnewaddress            # a wallet address (starts with 'B')
+bitqube-cli getwalletinfo            # balance, etc.
+bitqube-cli stop                     # shut the daemon down cleanly
+```
+
+New nodes bootstrap automatically from `seed.bitqube.org` plus the hard-coded
+fixed seeds. To help the network, open **TCP port 8851** to the internet and set
+`listen=1`. On a server, run `bitqubed` under `systemd` (or `screen`/`tmux`) so
+it survives logout; verify progress with `bitqube-cli getblockchaininfo`
+(`"verificationprogress"` near `1.0` means fully synced).
 
 ## Building from source (Ubuntu/Debian)
 
@@ -99,7 +162,7 @@ sudo apt-get install build-essential libtool autotools-dev automake pkg-config \
      libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler libqrencode-dev
 
 ./autogen.sh
-./configure --with-tx
+./configure
 make -j"$(nproc)"
 ```
 
@@ -117,18 +180,44 @@ make HOST=x86_64-pc-linux-gnu NO_QT=1 -j"$(nproc)"      # builds static deps
 cd ..
 ./autogen.sh
 CONFIG_SITE=$PWD/depends/x86_64-pc-linux-gnu/share/config.site \
-    ./configure --prefix=/ --with-tx --without-gui
+    ./configure --prefix=/ --without-gui
 make -j"$(nproc)"
 ```
 
-The resulting `bitqubed` / `bitqube-cli` / `bitqube-tx` link their dependencies
-statically and require only `glibc`.
+The resulting `bitqubed` / `bitqube-cli` link their dependencies statically and
+require only `glibc`. (Omit `NO_QT=1` / `--without-gui` to also build the
+portable `bitqube-qt`. Cross-compiling Windows and macOS release binaries is
+supported via the same `depends` system with the appropriate `HOST=`.)
 
 ## Mining
 
-BitQube uses **KawPoW**, so standard KawPoW GPU miners (e.g. kawpowminer,
-T-Rex, NBMiner) work by pointing them at a `bitqubed` node or a pool. The low
-launch difficulty makes the first blocks CPU-mineable for bootstrapping.
+BitQube uses **KawPoW**, so any standard KawPoW GPU miner (T-Rex, kawpowminer,
+NBMiner, etc.) works. The low launch difficulty makes the first blocks
+CPU-mineable for bootstrapping.
+
+### Pool mining (recommended)
+
+Public pool: **`stratum+tcp://5.78.79.98`** — three ports for different
+difficulty tiers: **`10008`** (low), **`10032`** (medium), **`10256`** (high).
+Pick the port that matches your hashrate.
+
+Example with T-Rex:
+
+```bash
+t-rex -a kawpow \
+      -o stratum+tcp://5.78.79.98:10032 \
+      -u <YOUR_BTQ_ADDRESS> \
+      -p x -w rig1
+```
+
+Your `<YOUR_BTQ_ADDRESS>` is any BitQube address (starts with `B`) from
+`bitqube-cli getnewaddress` or the Qt wallet. Track workers and payouts on the
+pool's web dashboard and confirm coins in the [block explorer](https://explorer.bitqube.org).
+
+### Solo mining
+
+Point the miner at your own synced `bitqubed` (with `server=1` and RPC
+credentials set) instead of the pool address.
 
 ## Assets
 

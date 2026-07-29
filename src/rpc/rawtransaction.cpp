@@ -363,14 +363,14 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
             "    transferwithmessage      0\n"
             "    issue                  " + i64tostr(GetBurnAmount(AssetType::ROOT) / COIN) + " to " + GetFeeAddress(AssetType::ROOT) + "\n"
             "    issue (subasset)       " + i64tostr(GetBurnAmount(AssetType::SUB) / COIN) + " to " + GetFeeAddress(AssetType::SUB) + "\n"
-            "    issue_unique             " + i64tostr(GetBurnAmount(AssetType::UNIQUE) / COIN) + " to " + GetFeeAddress(AssetType::UNIQUE) + "\n"
+            "    issue_unique             " + std::string("0.1") + " to " + GetFeeAddress(AssetType::UNIQUE) + "\n"
             "    reissue                " + i64tostr(GetBurnAmount(AssetType::REISSUE) / COIN) + " to " + GetFeeAddress(AssetType::REISSUE) + "\n"
             "    issue_restricted      " + i64tostr(GetBurnAmount(AssetType::RESTRICTED) / COIN) + " to " + GetFeeAddress(AssetType::RESTRICTED) + "\n"
             "    reissue_restricted     " + i64tostr(GetBurnAmount(AssetType::REISSUE) / COIN) + " to " + GetFeeAddress(AssetType::REISSUE) + "\n"
             "    issue_qualifier       " + i64tostr(GetBurnAmount(AssetType::QUALIFIER) / COIN) + " to " + GetFeeAddress(AssetType::QUALIFIER) + "\n"
             "    issue_qualifier (sub)  " + i64tostr(GetBurnAmount(AssetType::SUB_QUALIFIER) / COIN) + " to " + GetFeeAddress(AssetType::SUB_QUALIFIER) + "\n"
-            "    tag_addresses          " + "0.1 to " + GetFeeAddress(AssetType::NULL_ADD_QUALIFIER) + " (per address)\n"
-            "    untag_addresses        " + "0.1 to " + GetFeeAddress(AssetType::NULL_ADD_QUALIFIER) + " (per address)\n"
+            "    tag_addresses          " + "0.01 to " + GetFeeAddress(AssetType::NULL_ADD_QUALIFIER) + " (per address)\n"
+            "    untag_addresses        " + "0.01 to " + GetFeeAddress(AssetType::NULL_ADD_QUALIFIER) + " (per address)\n"
             "    freeze_addresses         0\n"
             "    unfreeze_addresses       0\n"
             "    freeze_asset             0\n"
@@ -587,8 +587,8 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
             "\nExamples:\n"
             + HelpExampleCli("createrawtransaction", "\"[{\\\"txid\\\":\\\"mycoin\\\",\\\"vout\\\":0}]\" \"{\\\"address\\\":0.01}\"")
             + HelpExampleCli("createrawtransaction", "\"[{\\\"txid\\\":\\\"mycoin\\\",\\\"vout\\\":0}]\" \"{\\\"data\\\":\\\"00010203\\\"}\"")
-            + HelpExampleCli("createrawtransaction", "\"[{\\\"txid\\\":\\\"mycoin\\\",\\\"vout\\\":0}]\" \"{\\\"RXissueAssetXXXXXXXXXXXXXXXXXhhZGt\\\":500,\\\"change_address\\\":change_amount,\\\"issuer_address\\\":{\\\"issue\\\":{\\\"asset_name\\\":\\\"MYASSET\\\",\\\"asset_quantity\\\":1000000,\\\"units\\\":1,\\\"reissuable\\\":0,\\\"has_ipfs\\\":1,\\\"ipfs_hash\\\":\\\"43f81c6f2c0593bde5a85e09ae662816eca80797\\\"}}}\"")
-            + HelpExampleCli("createrawtransaction", "\"[{\\\"txid\\\":\\\"mycoin\\\",\\\"vout\\\":0}]\" \"{\\\"RXissueRestrictedXXXXXXXXXXXXzJZ1q\\\":1500,\\\"change_address\\\":change_amount,\\\"issuer_address\\\":{\\\"issue_restricted\\\":{\\\"asset_name\\\":\\\"$MYASSET\\\",\\\"asset_quantity\\\":1000000,\\\"verifier_string\\\":\\\"#TAG & !KYC\\\",\\\"units\\\":1,\\\"reissuable\\\":0,\\\"has_ipfs\\\":1,\\\"ipfs_hash\\\":\\\"43f81c6f2c0593bde5a85e09ae662816eca80797\\\"}}}\"")
+            + HelpExampleCli("createrawtransaction", "\"[{\\\"txid\\\":\\\"mycoin\\\",\\\"vout\\\":0}]\" \"{\\\"RXissueAssetXXXXXXXXXXXXXXXXXhhZGt\\\":5,\\\"change_address\\\":change_amount,\\\"issuer_address\\\":{\\\"issue\\\":{\\\"asset_name\\\":\\\"MYASSET\\\",\\\"asset_quantity\\\":1000000,\\\"units\\\":1,\\\"reissuable\\\":0,\\\"has_ipfs\\\":1,\\\"ipfs_hash\\\":\\\"43f81c6f2c0593bde5a85e09ae662816eca80797\\\"}}}\"")
+            + HelpExampleCli("createrawtransaction", "\"[{\\\"txid\\\":\\\"mycoin\\\",\\\"vout\\\":0}]\" \"{\\\"RXissueRestrictedXXXXXXXXXXXXzJZ1q\\\":20,\\\"change_address\\\":change_amount,\\\"issuer_address\\\":{\\\"issue_restricted\\\":{\\\"asset_name\\\":\\\"$MYASSET\\\",\\\"asset_quantity\\\":1000000,\\\"verifier_string\\\":\\\"#TAG & !KYC\\\",\\\"units\\\":1,\\\"reissuable\\\":0,\\\"has_ipfs\\\":1,\\\"ipfs_hash\\\":\\\"43f81c6f2c0593bde5a85e09ae662816eca80797\\\"}}}\"")
             + HelpExampleCli("createrawtransaction", "\"[{\\\"txid\\\":\\\"mycoin\\\",\\\"vout\\\":0}]\" \"{\\\"RXissueUniqueAssetXXXXXXXXXXWEAe58\\\":20,\\\"change_address\\\":change_amount,\\\"issuer_address\\\":{\\\"issue_unique\\\":{\\\"root_name\\\":\\\"MYASSET\\\",\\\"asset_tags\\\":[\\\"ALPHA\\\",\\\"BETA\\\"],\\\"ipfs_hashes\\\":[\\\"43f81c6f2c0593bde5a85e09ae662816eca80797\\\",\\\"43f81c6f2c0593bde5a85e09ae662816eca80797\\\"]}}}\"")
             + HelpExampleCli("createrawtransaction", "\"[{\\\"txid\\\":\\\"mycoin\\\",\\\"vout\\\":0},{\\\"txid\\\":\\\"myasset\\\",\\\"vout\\\":0}]\" \"{\\\"address\\\":{\\\"transfer\\\":{\\\"MYASSET\\\":50}}}\"")
             + HelpExampleCli("createrawtransaction", "\"[{\\\"txid\\\":\\\"mycoin\\\",\\\"vout\\\":0},{\\\"txid\\\":\\\"myasset\\\",\\\"vout\\\":0}]\" \"{\\\"address\\\":{\\\"transferwithmessage\\\":{\\\"MYASSET\\\":50,\\\"message\\\":\\\"hash\\\",\\\"expire_time\\\": utc_time}}}\"")

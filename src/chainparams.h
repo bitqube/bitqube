@@ -142,6 +142,7 @@ public:
     int MinReorganizationAge() const { return nMinReorganizationAge; }
 
     int GetAssetActivationHeight() const { return nAssetActivationHeight; }
+    int GetAssetFeeReductionHeight() const { return nAssetFeeReductionHeight; }
     /** BTQ End **/
 
 protected:
@@ -199,6 +200,7 @@ protected:
     int nMinReorganizationAge;
 
     int nAssetActivationHeight;
+    int nAssetFeeReductionHeight;
 
     uint32_t nKAAAWWWPOWActivationTime;
     /** BTQ End **/

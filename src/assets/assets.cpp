@@ -3605,49 +3605,60 @@ void GetAllMyAssets(CWallet* pwallet, std::vector<std::string>& names, int nMinC
 }
 #endif
 
+// Asset issuance fees are height-gated: the original ("legacy") fees apply up
+// to GetAssetFeeReductionHeight() so that the pre-reduction chain history
+// (issuances that burned the old amounts) stays valid; the reduced fees held
+// in chainparams apply from that height onward. Uses chainActive.Height() the
+// same way the asset-activation gate does.
+static bool UseReducedAssetFees()
+{
+    return chainActive.Tip() != nullptr &&
+           chainActive.Height() >= GetParams().GetAssetFeeReductionHeight();
+}
+
 CAmount GetIssueAssetBurnAmount()
 {
-    return GetParams().IssueAssetBurnAmount();
+    return UseReducedAssetFees() ? GetParams().IssueAssetBurnAmount() : 500 * COIN;
 }
 
 CAmount GetReissueAssetBurnAmount()
 {
-    return GetParams().ReissueAssetBurnAmount();
+    return UseReducedAssetFees() ? GetParams().ReissueAssetBurnAmount() : 100 * COIN;
 }
 
 CAmount GetIssueSubAssetBurnAmount()
 {
-    return GetParams().IssueSubAssetBurnAmount();
+    return UseReducedAssetFees() ? GetParams().IssueSubAssetBurnAmount() : 100 * COIN;
 }
 
 CAmount GetIssueUniqueAssetBurnAmount()
 {
-    return GetParams().IssueUniqueAssetBurnAmount();
+    return UseReducedAssetFees() ? GetParams().IssueUniqueAssetBurnAmount() : 5 * COIN;
 }
 
 CAmount GetIssueMsgChannelAssetBurnAmount()
 {
-    return GetParams().IssueMsgChannelAssetBurnAmount();
+    return UseReducedAssetFees() ? GetParams().IssueMsgChannelAssetBurnAmount() : 100 * COIN;
 }
 
 CAmount GetIssueQualifierAssetBurnAmount()
 {
-    return GetParams().IssueQualifierAssetBurnAmount();
+    return UseReducedAssetFees() ? GetParams().IssueQualifierAssetBurnAmount() : 1000 * COIN;
 }
 
 CAmount GetIssueSubQualifierAssetBurnAmount()
 {
-    return GetParams().IssueSubQualifierAssetBurnAmount();
+    return UseReducedAssetFees() ? GetParams().IssueSubQualifierAssetBurnAmount() : 100 * COIN;
 }
 
 CAmount GetIssueRestrictedAssetBurnAmount()
 {
-    return GetParams().IssueRestrictedAssetBurnAmount();
+    return UseReducedAssetFees() ? GetParams().IssueRestrictedAssetBurnAmount() : 1500 * COIN;
 }
 
 CAmount GetAddNullQualifierTagBurnAmount()
 {
-    return GetParams().AddNullQualifierTagBurnAmount();
+    return UseReducedAssetFees() ? GetParams().AddNullQualifierTagBurnAmount() : 0.1 * COIN;
 }
 
 CAmount GetBurnAmount(const int nType)

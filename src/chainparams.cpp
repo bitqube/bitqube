@@ -295,6 +295,7 @@ public:
         nMinReorganizationAge = 60 * 60 * 12; // 12 hours
 
         nAssetActivationHeight = 6700; // BitQube: all asset features activate at this height. The inherited Ravencoin BIP9 window (2018-2019) is dead, so activation is height-gated in AreAssetsDeployed()/IsRip5Active() rather than by miner signaling.
+        nAssetFeeReductionHeight = 8400; // BitQube: asset issuance fees drop to the reduced amounts above at this height. Before it the legacy fees (500/100/.../0.1) apply so the pre-reduction chain (issuances that burned the old amounts) stays valid. All nodes must upgrade before this height.
         nMessagingActivationBlock = 1; // Messaging active from launch
         nRestrictedActivationBlock = 1; // Restricted assets active from launch
 
@@ -517,6 +518,7 @@ public:
         nMinReorganizationAge = 60 * 60 * 12; // 12 hours
 
         nAssetActivationHeight = 1; // Assets active from launch
+        nAssetFeeReductionHeight = 0; // testnet: reduced asset fees from genesis
         nMessagingActivationBlock = 1; // Messaging active from launch
         nRestrictedActivationBlock = 1; // Restricted assets active from launch
 
@@ -724,6 +726,7 @@ public:
         nMinReorganizationAge = 60 * 60 * 12; // 12 hours
 
         nAssetActivationHeight = 0; // Asset activated block height
+        nAssetFeeReductionHeight = 0; // regtest: reduced asset fees from genesis
         nMessagingActivationBlock = 0; // Messaging activated block height
         nRestrictedActivationBlock = 0; // Restricted activated block height
 

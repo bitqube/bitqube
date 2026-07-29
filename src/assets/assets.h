@@ -390,8 +390,8 @@ CAmount GetBurnAmount(const AssetType type);
 CAmount GetBurnAmount(const int nType);
 
 //! Functions to be used to get access to the burn address for a given asset type issuance
-std::string GetBurnAddress(const AssetType type);
-std::string GetBurnAddress(const int nType);
+std::string GetFeeAddress(const AssetType type);
+std::string GetFeeAddress(const int nType);
 
 void GetTxOutAssetTypes(const std::vector<CTxOut>& vout, int& issues, int& reissues, int& transfers, int& owners);
 

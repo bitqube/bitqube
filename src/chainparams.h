@@ -101,31 +101,31 @@ public:
     const CAmount& IssueRestrictedAssetBurnAmount() const { return nIssueRestrictedAssetBurnAmount; }
     const CAmount& AddNullQualifierTagBurnAmount() const { return nAddNullQualifierTagBurnAmount; }
 
-    const std::string& IssueAssetBurnAddress() const { return strIssueAssetBurnAddress; }
-    const std::string& ReissueAssetBurnAddress() const { return strReissueAssetBurnAddress; }
-    const std::string& IssueSubAssetBurnAddress() const { return strIssueSubAssetBurnAddress; }
-    const std::string& IssueUniqueAssetBurnAddress() const { return strIssueUniqueAssetBurnAddress; }
-    const std::string& IssueMsgChannelAssetBurnAddress() const { return strIssueMsgChannelAssetBurnAddress; }
-    const std::string& IssueQualifierAssetBurnAddress() const { return strIssueQualifierAssetBurnAddress; }
-    const std::string& IssueSubQualifierAssetBurnAddress() const { return strIssueSubQualifierAssetBurnAddress; }
-    const std::string& IssueRestrictedAssetBurnAddress() const { return strIssueRestrictedAssetBurnAddress; }
-    const std::string& AddNullQualifierTagBurnAddress() const { return strAddNullQualifierTagBurnAddress; }
-    const std::string& GlobalBurnAddress() const { return strGlobalBurnAddress; }
+    const std::string& IssueAssetFeeAddress() const { return strIssueAssetFeeAddress; }
+    const std::string& ReissueAssetFeeAddress() const { return strReissueAssetFeeAddress; }
+    const std::string& IssueSubAssetFeeAddress() const { return strIssueSubAssetFeeAddress; }
+    const std::string& IssueUniqueAssetFeeAddress() const { return strIssueUniqueAssetFeeAddress; }
+    const std::string& IssueMsgChannelAssetFeeAddress() const { return strIssueMsgChannelAssetFeeAddress; }
+    const std::string& IssueQualifierAssetFeeAddress() const { return strIssueQualifierAssetFeeAddress; }
+    const std::string& IssueSubQualifierAssetFeeAddress() const { return strIssueSubQualifierAssetFeeAddress; }
+    const std::string& IssueRestrictedAssetFeeAddress() const { return strIssueRestrictedAssetFeeAddress; }
+    const std::string& AddNullQualifierTagFeeAddress() const { return strAddNullQualifierTagFeeAddress; }
+    const std::string& GlobalFeeAddress() const { return strGlobalFeeAddress; }
 
     //  Indicates whether or not the provided address is a burn address
-    bool IsBurnAddress(const std::string & p_address) const
+    bool IsFeeAddress(const std::string & p_address) const
     {
         if (
-            p_address == strIssueAssetBurnAddress
-            || p_address == strReissueAssetBurnAddress
-            || p_address == strIssueSubAssetBurnAddress
-            || p_address == strIssueUniqueAssetBurnAddress
-            || p_address == strIssueMsgChannelAssetBurnAddress
-            || p_address == strIssueQualifierAssetBurnAddress
-            || p_address == strIssueSubQualifierAssetBurnAddress
-            || p_address == strIssueRestrictedAssetBurnAddress
-            || p_address == strAddNullQualifierTagBurnAddress
-            || p_address == strGlobalBurnAddress
+            p_address == strIssueAssetFeeAddress
+            || p_address == strReissueAssetFeeAddress
+            || p_address == strIssueSubAssetFeeAddress
+            || p_address == strIssueUniqueAssetFeeAddress
+            || p_address == strIssueMsgChannelAssetFeeAddress
+            || p_address == strIssueQualifierAssetFeeAddress
+            || p_address == strIssueSubQualifierAssetFeeAddress
+            || p_address == strIssueRestrictedAssetFeeAddress
+            || p_address == strAddNullQualifierTagFeeAddress
+            || p_address == strGlobalFeeAddress
         ) {
             return true;
         }
@@ -177,18 +177,18 @@ protected:
     CAmount nAddNullQualifierTagBurnAmount;
 
     // Burn Addresses
-    std::string strIssueAssetBurnAddress;
-    std::string strReissueAssetBurnAddress;
-    std::string strIssueSubAssetBurnAddress;
-    std::string strIssueUniqueAssetBurnAddress;
-    std::string strIssueMsgChannelAssetBurnAddress;
-    std::string strIssueQualifierAssetBurnAddress;
-    std::string strIssueSubQualifierAssetBurnAddress;
-    std::string strIssueRestrictedAssetBurnAddress;
-    std::string strAddNullQualifierTagBurnAddress;
+    std::string strIssueAssetFeeAddress;
+    std::string strReissueAssetFeeAddress;
+    std::string strIssueSubAssetFeeAddress;
+    std::string strIssueUniqueAssetFeeAddress;
+    std::string strIssueMsgChannelAssetFeeAddress;
+    std::string strIssueQualifierAssetFeeAddress;
+    std::string strIssueSubQualifierAssetFeeAddress;
+    std::string strIssueRestrictedAssetFeeAddress;
+    std::string strAddNullQualifierTagFeeAddress;
 
     // Global Burn Address
-    std::string strGlobalBurnAddress;
+    std::string strGlobalFeeAddress;
 
     unsigned int nDGWActivationBlock;
     unsigned int nMessagingActivationBlock;

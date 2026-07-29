@@ -18,7 +18,7 @@ BOOST_FIXTURE_TEST_SUITE(qualifier_tests, BasicTestingSetup)
 
         CMutableTransaction mutableTransaction;
 
-        CScript newQualifierScript = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript newQualifierScript = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
 
         CNewAsset qualifier_asset("#QUALIFIER_NAME", 5 * COIN);
         qualifier_asset.ConstructTransaction(newQualifierScript);
@@ -34,7 +34,7 @@ BOOST_FIXTURE_TEST_SUITE(qualifier_tests, BasicTestingSetup)
         BOOST_CHECK_MESSAGE(QualifierAssetFromTransaction(tx, fetched_asset,address), "Failed to get qualifier from transaction");
         BOOST_CHECK_MESSAGE(fetched_asset.strName == qualifier_asset.strName, "Qualifier Tests: Failed asset names check");
         BOOST_CHECK_MESSAGE(fetched_asset.nAmount== qualifier_asset.nAmount, "Qualifier Tests: Failed amount check");
-        BOOST_CHECK_MESSAGE(address == GetParams().GlobalBurnAddress(), "Qualifier Tests: Failed address check");
+        BOOST_CHECK_MESSAGE(address == GetParams().GlobalFeeAddress(), "Qualifier Tests: Failed address check");
     }
 
     BOOST_AUTO_TEST_CASE(qualifier_from_transaction__fail_test)
@@ -43,7 +43,7 @@ BOOST_FIXTURE_TEST_SUITE(qualifier_tests, BasicTestingSetup)
 
         CMutableTransaction mutableTransaction;
 
-        CScript newQualifierScript = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript newQualifierScript = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
 
         CNewAsset qualifier_asset("NOT_QUALIFIER_NAME", 5 * COIN);
         qualifier_asset.ConstructTransaction(newQualifierScript);
@@ -66,12 +66,12 @@ BOOST_FIXTURE_TEST_SUITE(qualifier_tests, BasicTestingSetup)
 
         // Create transaction and add burn to it
         CMutableTransaction mutableTransaction;
-        CScript burnScript = GetScriptForDestination(DecodeDestination(GetBurnAddress(AssetType::QUALIFIER)));
+        CScript burnScript = GetScriptForDestination(DecodeDestination(GetFeeAddress(AssetType::QUALIFIER)));
         CTxOut burnOut(GetBurnAmount(AssetType::QUALIFIER), burnScript);
         mutableTransaction.vout.push_back(burnOut);
 
         // Create the new Qualifier Script
-        CScript newQualifierScript = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript newQualifierScript = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
         CNewAsset qualifier_asset("#QUALIFIER_NAME", 5 * COIN, 0, 0, 0, "");
         qualifier_asset.ConstructTransaction(newQualifierScript);
         CTxOut assetOut(0, newQualifierScript);
@@ -89,19 +89,19 @@ BOOST_FIXTURE_TEST_SUITE(qualifier_tests, BasicTestingSetup)
 
         // Create transaction and add burn to it
         CMutableTransaction mutableTransaction;
-        CScript burnScript = GetScriptForDestination(DecodeDestination(GetBurnAddress(AssetType::SUB_QUALIFIER)));
+        CScript burnScript = GetScriptForDestination(DecodeDestination(GetFeeAddress(AssetType::SUB_QUALIFIER)));
         CTxOut burnOut(GetBurnAmount(AssetType::SUB_QUALIFIER), burnScript);
         mutableTransaction.vout.push_back(burnOut);
 
         // Add the parent transaction for sub qualifier tx
         CAssetTransfer parentTransfer("#QUALIFIER_NAME", OWNER_ASSET_AMOUNT);
-        CScript parentScript = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript parentScript = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
         parentTransfer.ConstructTransaction(parentScript);
         CTxOut parentOut(0, parentScript);
         mutableTransaction.vout.push_back(parentOut);
 
         // Create the new Qualifier Script
-        CScript newQualifierScript = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript newQualifierScript = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
         CNewAsset qualifier_asset("#QUALIFIER_NAME/#SUB1", 5 * COIN, 0, 0, 0, "");
         qualifier_asset.ConstructTransaction(newQualifierScript);
         CTxOut assetOut(0, newQualifierScript);

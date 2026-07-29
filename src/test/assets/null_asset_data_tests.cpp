@@ -17,7 +17,7 @@ BOOST_FIXTURE_TEST_SUITE(null_asset_data_tests, BasicTestingSetup)
         BOOST_TEST_MESSAGE("Running Null data from script");
 
         // Create the correct script
-        CScript nullDataScript = GetScriptForNullAssetDataDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript nullDataScript = GetScriptForNullAssetDataDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
 
         CNullAssetTxData nullData("#ADDTAG", (int)QualifierType::ADD_QUALIFIER);
         nullData.ConstructTransaction(nullDataScript);
@@ -34,7 +34,7 @@ BOOST_FIXTURE_TEST_SUITE(null_asset_data_tests, BasicTestingSetup)
         BOOST_TEST_MESSAGE("Running Null data from script failure");
 
         // Create an invalid script
-        CScript nullDataScript = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript nullDataScript = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
 
         CNullAssetTxData fetchedData;
         std::string fetchedAddress;

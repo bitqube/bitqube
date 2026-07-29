@@ -3074,7 +3074,7 @@ bool CheckIssueBurnTx(const CTxOut& txOut, const AssetType& type, const int numb
 
     // Get the burn address and amount for the type of asset
     burnAmount = GetBurnAmount(type);
-    burnAddress = GetBurnAddress(type);
+    burnAddress = GetFeeAddress(type);
 
     // If issuing multiple (unique) assets need to burn for each
     burnAmount *= numberIssued;
@@ -3121,7 +3121,7 @@ bool CheckReissueBurnTx(const CTxOut& txOut)
         return false;
 
     // Check destination address is the correct burn address
-    if (EncodeDestination(destination) != GetParams().ReissueAssetBurnAddress())
+    if (EncodeDestination(destination) != GetParams().ReissueAssetFeeAddress())
         return false;
 
     return true;
@@ -3685,36 +3685,36 @@ CAmount GetBurnAmount(const AssetType type)
     }
 }
 
-std::string GetBurnAddress(const int nType)
+std::string GetFeeAddress(const int nType)
 {
-    return GetBurnAddress((AssetType(nType)));
+    return GetFeeAddress((AssetType(nType)));
 }
 
-std::string GetBurnAddress(const AssetType type)
+std::string GetFeeAddress(const AssetType type)
 {
     switch (type) {
         case AssetType::ROOT:
-            return GetParams().IssueAssetBurnAddress();
+            return GetParams().IssueAssetFeeAddress();
         case AssetType::SUB:
-            return GetParams().IssueSubAssetBurnAddress();
+            return GetParams().IssueSubAssetFeeAddress();
         case AssetType::MSGCHANNEL:
-            return GetParams().IssueMsgChannelAssetBurnAddress();
+            return GetParams().IssueMsgChannelAssetFeeAddress();
         case AssetType::OWNER:
             return "";
         case AssetType::UNIQUE:
-            return GetParams().IssueUniqueAssetBurnAddress();
+            return GetParams().IssueUniqueAssetFeeAddress();
         case AssetType::VOTE:
             return "";
         case AssetType::REISSUE:
-            return GetParams().ReissueAssetBurnAddress();
+            return GetParams().ReissueAssetFeeAddress();
         case AssetType::QUALIFIER:
-            return GetParams().IssueQualifierAssetBurnAddress();
+            return GetParams().IssueQualifierAssetFeeAddress();
         case AssetType::SUB_QUALIFIER:
-            return GetParams().IssueSubQualifierAssetBurnAddress();
+            return GetParams().IssueSubQualifierAssetFeeAddress();
         case AssetType::RESTRICTED:
-            return GetParams().IssueRestrictedAssetBurnAddress();
+            return GetParams().IssueRestrictedAssetFeeAddress();
         case AssetType::NULL_ADD_QUALIFIER:
-            return GetParams().AddNullQualifierTagBurnAddress();
+            return GetParams().AddNullQualifierTagFeeAddress();
         default:
             return "";
     }
@@ -3910,7 +3910,7 @@ bool CreateAssetTransaction(CWallet* pwallet, CCoinControl& coinControl, const s
 
     // Assign the correct burn amount and the correct burn address depending on the type of asset issuance that is happening
     CAmount burnAmount = GetBurnAmount(assetType) * assets.size();
-    CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetBurnAddress(assetType)));
+    CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetFeeAddress(assetType)));
 
     CAmount curBalance = pwallet->GetBalance();
 
@@ -4187,7 +4187,7 @@ bool CreateReissueAssetTransaction(CWallet* pwallet, CCoinControl& coinControl, 
     }
 
     // Get the script for the burn address
-    CScript scriptPubKeyBurn = GetScriptForDestination(DecodeDestination(GetParams().ReissueAssetBurnAddress()));
+    CScript scriptPubKeyBurn = GetScriptForDestination(DecodeDestination(GetParams().ReissueAssetFeeAddress()));
 
     // Create and send the transaction
     CRecipient recipient = {scriptPubKeyBurn, burnAmount, fSubtractFeeFromAmount};
@@ -4328,7 +4328,7 @@ bool CreateTransferAssetTransaction(CWallet* pwallet, const CCoinControl& coinCo
 
         // Add the burn recipient for adding tags to addresses
         if (nAddTagCount) {
-            CScript addTagBurnScript = GetScriptForDestination(DecodeDestination(GetBurnAddress(AssetType::NULL_ADD_QUALIFIER)));
+            CScript addTagBurnScript = GetScriptForDestination(DecodeDestination(GetFeeAddress(AssetType::NULL_ADD_QUALIFIER)));
             CRecipient addTagBurnRecipient = {addTagBurnScript, GetBurnAmount(AssetType::NULL_ADD_QUALIFIER) * nAddTagCount, false};
             vecSend.push_back(addTagBurnRecipient);
         }

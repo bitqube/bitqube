@@ -843,7 +843,7 @@ void CreateAssetDialog::onCreateAssetClicked()
     QString amount = "<b>" + QString::fromStdString(ValueFromAmountString(GetBurnAmount(type), 8)) + " BTQ";
     amount.append("</b>");
     // generate monospace address string
-    QString addressburn = "<span style='font-family: monospace;'>" + QString::fromStdString(GetBurnAddress(type));
+    QString addressburn = "<span style='font-family: monospace;'>" + QString::fromStdString(GetFeeAddress(type));
     addressburn.append("</span>");
 
     QString recipientElement1;

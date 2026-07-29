@@ -29,7 +29,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
 
         // Create the asset scriptPubKey
         CAssetTransfer asset("BITQUBETEST", 1000);
-        CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
         asset.ConstructTransaction(scriptPubKey);
 
         CCoinsView view;
@@ -77,7 +77,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
 
         // Create the asset scriptPubKey
         CAssetTransfer asset("BITQUBETEST", 1000);
-        CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
         asset.ConstructTransaction(scriptPubKey);
 
         CCoinsView view;
@@ -105,7 +105,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
         // Create CTxOut that will only send 100 of the asset
         // This should fail because 900 BITQUBE doesn't have a destination
         CAssetTransfer assetTransfer("BITQUBETEST", 100);
-        CScript scriptLess = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript scriptLess = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
         assetTransfer.ConstructTransaction(scriptLess);
 
         CTxOut txOut2;
@@ -134,7 +134,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
 
         // Create the asset scriptPubKey
         CAssetTransfer asset("BITQUBETEST", 1000);
-        CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
         asset.ConstructTransaction(scriptPubKey);
 
         CCoinsView view;
@@ -163,7 +163,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
         for (int i = 0; i < 10; i++)
         {
             CAssetTransfer asset2("BITQUBETEST", 100);
-            CScript scriptPubKey2 = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+            CScript scriptPubKey2 = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
             asset2.ConstructTransaction(scriptPubKey2);
 
             CTxOut txOut2;
@@ -195,7 +195,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
 
         // Create the asset scriptPubKey
         CAssetTransfer asset("BITQUBETEST", 1000);
-        CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
         asset.ConstructTransaction(scriptPubKey);
 
         CCoinsView view;
@@ -224,7 +224,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
         for (int i = 0; i < 12; i++)
         {
             CAssetTransfer asset2("BITQUBETEST", 100);
-            CScript scriptPubKey2 = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+            CScript scriptPubKey2 = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
             asset2.ConstructTransaction(scriptPubKey2);
 
             CTxOut txOut2;
@@ -256,15 +256,15 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
 
         // Create the asset scriptPubKeys
         CAssetTransfer asset("BITQUBETEST", 1000);
-        CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
         asset.ConstructTransaction(scriptPubKey);
 
         CAssetTransfer asset2("BITQUBETESTTEST", 1000);
-        CScript scriptPubKey2 = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript scriptPubKey2 = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
         asset2.ConstructTransaction(scriptPubKey2);
 
         CAssetTransfer asset3("BITQUBETESTTESTTEST", 1000);
-        CScript scriptPubKey3 = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript scriptPubKey3 = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
         asset3.ConstructTransaction(scriptPubKey3);
 
         CCoinsView view;
@@ -321,7 +321,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
         {
             // Add the first asset
             CAssetTransfer outAsset("BITQUBETEST", 100);
-            CScript outScript = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+            CScript outScript = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
             outAsset.ConstructTransaction(outScript);
 
             CTxOut txOutNew;
@@ -332,7 +332,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
 
             // Add the second asset
             CAssetTransfer outAsset2("BITQUBETESTTEST", 100);
-            CScript outScript2 = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+            CScript outScript2 = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
             outAsset2.ConstructTransaction(outScript2);
 
             CTxOut txOutNew2;
@@ -343,7 +343,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
 
             // Add the third asset
             CAssetTransfer outAsset3("BITQUBETESTTESTTEST", 100);
-            CScript outScript3 = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+            CScript outScript3 = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
             outAsset3.ConstructTransaction(outScript3);
 
             CTxOut txOutNew3;
@@ -376,7 +376,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
         {
             // Add the first asset
             CAssetTransfer outAsset("BITQUBETEST", 100);
-            CScript outScript = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+            CScript outScript = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
             outAsset.ConstructTransaction(outScript);
 
             CTxOut txOutNew;
@@ -387,7 +387,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
 
             // Add the second asset
             CAssetTransfer outAsset2("BITQUBETESTTEST", 100);
-            CScript outScript2 = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+            CScript outScript2 = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
             outAsset2.ConstructTransaction(outScript2);
 
             CTxOut txOutNew2;
@@ -398,7 +398,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
 
             // Add the third asset
             CAssetTransfer outAsset3("BITQUBETESTTESTTEST", 100);
-            CScript outScript3 = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+            CScript outScript3 = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
             outAsset3.ConstructTransaction(outScript3);
 
             CTxOut txOutNew3;
@@ -490,7 +490,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
 
         // Create the reissue asset
         CReissueAsset reissueAsset("ENFORCE_VALUE", 100, 8, true, "");
-        CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
         reissueAsset.ConstructTransaction(scriptPubKey);
 
         // Create an invalid reissue asset with nValue not equal to zero
@@ -577,7 +577,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
 
         // Create a transfer asset
         CAssetTransfer transferAsset("COINBASE_TEST", 100);
-        CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
         transferAsset.ConstructTransaction(scriptPubKey);
 
         // Add the transfer asset script into the coinbase

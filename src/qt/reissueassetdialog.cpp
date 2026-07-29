@@ -986,7 +986,7 @@ void ReissueAssetDialog::onReissueAssetClicked()
     QString amount = "<b>" + QString::fromStdString(ValueFromAmountString(GetReissueAssetBurnAmount(), 8)) + " BTQ";
     amount.append("</b>");
     // generate monospace address string
-    QString addressburn = "<span style='font-family: monospace;'>" + QString::fromStdString(GetParams().ReissueAssetBurnAddress());
+    QString addressburn = "<span style='font-family: monospace;'>" + QString::fromStdString(GetParams().ReissueAssetFeeAddress());
     addressburn.append("</span>");
 
     QString recipientElement1;

@@ -228,7 +228,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tests, BasicTestingSetup)
 
         // Create the asset scriptPubKey
         CAssetTransfer asset("BITQUBE", 1000);
-        CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
         asset.ConstructTransaction(scriptPubKey);
 
         CTxOut txOut;
@@ -249,7 +249,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tests, BasicTestingSetup)
 
         // Create the asset scriptPubKey
         CNewAsset asset("BITQUBE", 1000, 8, 1, 0, "");
-        CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
         asset.ConstructTransaction(scriptPubKey);
 
         CTxOut txOut;
@@ -699,7 +699,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tests, BasicTestingSetup)
 
         // Create the script for addinga  tag to an address
         CNullAssetTxData addTagData("#TAG", 1);
-        CScript addTagScript = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
+        CScript addTagScript = GetScriptForDestination(DecodeDestination(GetParams().GlobalFeeAddress()));
         addTagData.ConstructTransaction(addTagScript);
 
         // Create the txOut and add it to the mutable transaction
@@ -711,7 +711,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tests, BasicTestingSetup)
         BOOST_CHECK_MESSAGE(!txNoFee.CheckAddingTagBurnFee(1), "CheckAddingTagBurnFee: Test 1 Didn't fail with no burn fee");
 
         // Create the script that adds the correct burn fee
-        CScript addTagBurnFeeScript = GetScriptForDestination(DecodeDestination(GetBurnAddress(AssetType::NULL_ADD_QUALIFIER)));
+        CScript addTagBurnFeeScript = GetScriptForDestination(DecodeDestination(GetFeeAddress(AssetType::NULL_ADD_QUALIFIER)));
         CTxOut txBurnFee(GetBurnAmount(AssetType::NULL_ADD_QUALIFIER), addTagBurnFeeScript);
         muttx.vout.push_back(txBurnFee);
 
@@ -721,7 +721,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tests, BasicTestingSetup)
 
         // Create the script that adds the burn fee twice
         muttx.vout.pop_back();
-        CScript addDoubleTagBurnFeeScript = GetScriptForDestination(DecodeDestination(GetBurnAddress(AssetType::NULL_ADD_QUALIFIER)));
+        CScript addDoubleTagBurnFeeScript = GetScriptForDestination(DecodeDestination(GetFeeAddress(AssetType::NULL_ADD_QUALIFIER)));
         CTxOut txDoubleBurnFee(GetBurnAmount(AssetType::NULL_ADD_QUALIFIER) * 2, addTagBurnFeeScript);
         muttx.vout.push_back(txDoubleBurnFee);
 

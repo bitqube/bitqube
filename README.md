@@ -14,7 +14,7 @@ and branding.
 
 - **Website:** https://bitqube.org
 - **Block explorer:** https://explorer.bitqube.org
-- **Mining pool:** `stratum+tcp://5.78.79.98:10032` (KawPoW)
+- **Mining pool:** `stratum+tcp://pool.bitqube.org:10032` (KawPoW)
 - **Source:** https://github.com/bitqube/bitqube
 - **Consensus:** Proof of Work — **KawPoW** (GPU-friendly, ASIC-resistant)
 - **Block time:** 1 minute
@@ -197,7 +197,7 @@ CPU-mineable for bootstrapping.
 
 ### Pool mining (recommended)
 
-Public pool: **`stratum+tcp://5.78.79.98`** — three ports for different
+Public pool: **`stratum+tcp://pool.bitqube.org`** — three ports for different
 difficulty tiers: **`10008`** (low), **`10032`** (medium), **`10256`** (high).
 Pick the port that matches your hashrate.
 
@@ -205,7 +205,7 @@ Example with T-Rex:
 
 ```bash
 t-rex -a kawpow \
-      -o stratum+tcp://5.78.79.98:10032 \
+      -o stratum+tcp://pool.bitqube.org:10032 \
       -u <YOUR_BTQ_ADDRESS> \
       -p x -w rig1
 ```

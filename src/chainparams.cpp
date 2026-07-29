@@ -262,30 +262,30 @@ public:
 
         /** BTQ Start **/
         // Burn Amounts
-        nIssueAssetBurnAmount = 500 * COIN;
-        nReissueAssetBurnAmount = 100 * COIN;
-        nIssueSubAssetBurnAmount = 100 * COIN;
-        nIssueUniqueAssetBurnAmount = 5 * COIN;
-        nIssueMsgChannelAssetBurnAmount = 100 * COIN;
-        nIssueQualifierAssetBurnAmount = 1000 * COIN;
-        nIssueSubQualifierAssetBurnAmount = 100 * COIN;
-        nIssueRestrictedAssetBurnAmount = 1500 * COIN;
-        nAddNullQualifierTagBurnAmount = .1 * COIN;
+        nIssueAssetBurnAmount = 5 * COIN;
+        nReissueAssetBurnAmount = 1 * COIN;
+        nIssueSubAssetBurnAmount = 1 * COIN;
+        nIssueUniqueAssetBurnAmount = 0.1 * COIN;
+        nIssueMsgChannelAssetBurnAmount = 1 * COIN;
+        nIssueQualifierAssetBurnAmount = 10 * COIN;
+        nIssueSubQualifierAssetBurnAmount = 1 * COIN;
+        nIssueRestrictedAssetBurnAmount = 20 * COIN;
+        nAddNullQualifierTagBurnAmount = 0.01 * COIN;
 
         // Asset-issuance FEE addresses. BitQube collects these fees to the admin
         // address (they are spendable, not burned). Provided by the project owner.
-        strIssueAssetBurnAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
-        strReissueAssetBurnAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
-        strIssueSubAssetBurnAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
-        strIssueUniqueAssetBurnAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
-        strIssueMsgChannelAssetBurnAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
-        strIssueQualifierAssetBurnAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
-        strIssueSubQualifierAssetBurnAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
-        strIssueRestrictedAssetBurnAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
-        strAddNullQualifierTagBurnAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
+        strIssueAssetFeeAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
+        strReissueAssetFeeAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
+        strIssueSubAssetFeeAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
+        strIssueUniqueAssetFeeAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
+        strIssueMsgChannelAssetFeeAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
+        strIssueQualifierAssetFeeAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
+        strIssueSubQualifierAssetFeeAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
+        strIssueRestrictedAssetFeeAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
+        strAddNullQualifierTagFeeAddress = "BC2MHYXdTCtNSHhbxoPfra9hi2t2Vng5jY";
 
             // Global Burn Address (voluntary asset burning — kept unspendable, NOT the admin address)
-        strGlobalBurnAddress = "BSMoPz6SgDJruMeVfqsNZ8zzVsWWbr3eVY";
+        strGlobalFeeAddress = "BSMoPz6SgDJruMeVfqsNZ8zzVsWWbr3eVY";
 
         // DGW Activation (BitQube: retargeting takes over right after the CPU-mining epoch)
         nDGWActivationBlock = 5000;
@@ -485,29 +485,29 @@ public:
 
         /** BTQ Start **/
         // Burn Amounts
-        nIssueAssetBurnAmount = 500 * COIN;
-        nReissueAssetBurnAmount = 100 * COIN;
-        nIssueSubAssetBurnAmount = 100 * COIN;
-        nIssueUniqueAssetBurnAmount = 5 * COIN;
-        nIssueMsgChannelAssetBurnAmount = 100 * COIN;
-        nIssueQualifierAssetBurnAmount = 1000 * COIN;
-        nIssueSubQualifierAssetBurnAmount = 100 * COIN;
-        nIssueRestrictedAssetBurnAmount = 1500 * COIN;
-        nAddNullQualifierTagBurnAmount = .1 * COIN;
+        nIssueAssetBurnAmount = 5 * COIN;
+        nReissueAssetBurnAmount = 1 * COIN;
+        nIssueSubAssetBurnAmount = 1 * COIN;
+        nIssueUniqueAssetBurnAmount = 0.1 * COIN;
+        nIssueMsgChannelAssetBurnAmount = 1 * COIN;
+        nIssueQualifierAssetBurnAmount = 10 * COIN;
+        nIssueSubQualifierAssetBurnAmount = 1 * COIN;
+        nIssueRestrictedAssetBurnAmount = 20 * COIN;
+        nAddNullQualifierTagBurnAmount = 0.01 * COIN;
 
         // Burn Addresses
-        strIssueAssetBurnAddress = "n1issueAssetXXXXXXXXXXXXXXXXWdnemQ";
-        strReissueAssetBurnAddress = "n1ReissueAssetXXXXXXXXXXXXXXWG9NLd";
-        strIssueSubAssetBurnAddress = "n1issueSubAssetXXXXXXXXXXXXXbNiH6v";
-        strIssueUniqueAssetBurnAddress = "n1issueUniqueAssetXXXXXXXXXXS4695i";
-        strIssueMsgChannelAssetBurnAddress = "n1issueMsgChanneLAssetXXXXXXT2PBdD";
-        strIssueQualifierAssetBurnAddress = "n1issueQuaLifierXXXXXXXXXXXXUysLTj";
-        strIssueSubQualifierAssetBurnAddress = "n1issueSubQuaLifierXXXXXXXXXYffPLh";
-        strIssueRestrictedAssetBurnAddress = "n1issueRestrictedXXXXXXXXXXXXZVT9V";
-        strAddNullQualifierTagBurnAddress = "n1addTagBurnXXXXXXXXXXXXXXXXX5oLMH";
+        strIssueAssetFeeAddress = "n1issueAssetXXXXXXXXXXXXXXXXWdnemQ";
+        strReissueAssetFeeAddress = "n1ReissueAssetXXXXXXXXXXXXXXWG9NLd";
+        strIssueSubAssetFeeAddress = "n1issueSubAssetXXXXXXXXXXXXXbNiH6v";
+        strIssueUniqueAssetFeeAddress = "n1issueUniqueAssetXXXXXXXXXXS4695i";
+        strIssueMsgChannelAssetFeeAddress = "n1issueMsgChanneLAssetXXXXXXT2PBdD";
+        strIssueQualifierAssetFeeAddress = "n1issueQuaLifierXXXXXXXXXXXXUysLTj";
+        strIssueSubQualifierAssetFeeAddress = "n1issueSubQuaLifierXXXXXXXXXYffPLh";
+        strIssueRestrictedAssetFeeAddress = "n1issueRestrictedXXXXXXXXXXXXZVT9V";
+        strAddNullQualifierTagFeeAddress = "n1addTagBurnXXXXXXXXXXXXXXXXX5oLMH";
 
         // Global Burn Address
-        strGlobalBurnAddress = "n1BurnXXXXXXXXXXXXXXXXXXXXXXU1qejP";
+        strGlobalFeeAddress = "n1BurnXXXXXXXXXXXXXXXXXXXXXXU1qejP";
 
         // DGW Activation (BitQube testnet: retargeting takes over after the CPU-mining epoch)
         nDGWActivationBlock = 5000;
@@ -692,29 +692,29 @@ public:
 
         /** BTQ Start **/
         // Burn Amounts
-        nIssueAssetBurnAmount = 500 * COIN;
-        nReissueAssetBurnAmount = 100 * COIN;
-        nIssueSubAssetBurnAmount = 100 * COIN;
-        nIssueUniqueAssetBurnAmount = 5 * COIN;
-        nIssueMsgChannelAssetBurnAmount = 100 * COIN;
-        nIssueQualifierAssetBurnAmount = 1000 * COIN;
-        nIssueSubQualifierAssetBurnAmount = 100 * COIN;
-        nIssueRestrictedAssetBurnAmount = 1500 * COIN;
-        nAddNullQualifierTagBurnAmount = .1 * COIN;
+        nIssueAssetBurnAmount = 5 * COIN;
+        nReissueAssetBurnAmount = 1 * COIN;
+        nIssueSubAssetBurnAmount = 1 * COIN;
+        nIssueUniqueAssetBurnAmount = 0.1 * COIN;
+        nIssueMsgChannelAssetBurnAmount = 1 * COIN;
+        nIssueQualifierAssetBurnAmount = 10 * COIN;
+        nIssueSubQualifierAssetBurnAmount = 1 * COIN;
+        nIssueRestrictedAssetBurnAmount = 20 * COIN;
+        nAddNullQualifierTagBurnAmount = 0.01 * COIN;
 
         // Burn Addresses
-        strIssueAssetBurnAddress = "n1issueAssetXXXXXXXXXXXXXXXXWdnemQ";
-        strReissueAssetBurnAddress = "n1ReissueAssetXXXXXXXXXXXXXXWG9NLd";
-        strIssueSubAssetBurnAddress = "n1issueSubAssetXXXXXXXXXXXXXbNiH6v";
-        strIssueUniqueAssetBurnAddress = "n1issueUniqueAssetXXXXXXXXXXS4695i";
-        strIssueMsgChannelAssetBurnAddress = "n1issueMsgChanneLAssetXXXXXXT2PBdD";
-        strIssueQualifierAssetBurnAddress = "n1issueQuaLifierXXXXXXXXXXXXUysLTj";
-        strIssueSubQualifierAssetBurnAddress = "n1issueSubQuaLifierXXXXXXXXXYffPLh";
-        strIssueRestrictedAssetBurnAddress = "n1issueRestrictedXXXXXXXXXXXXZVT9V";
-        strAddNullQualifierTagBurnAddress = "n1addTagBurnXXXXXXXXXXXXXXXXX5oLMH";
+        strIssueAssetFeeAddress = "n1issueAssetXXXXXXXXXXXXXXXXWdnemQ";
+        strReissueAssetFeeAddress = "n1ReissueAssetXXXXXXXXXXXXXXWG9NLd";
+        strIssueSubAssetFeeAddress = "n1issueSubAssetXXXXXXXXXXXXXbNiH6v";
+        strIssueUniqueAssetFeeAddress = "n1issueUniqueAssetXXXXXXXXXXS4695i";
+        strIssueMsgChannelAssetFeeAddress = "n1issueMsgChanneLAssetXXXXXXT2PBdD";
+        strIssueQualifierAssetFeeAddress = "n1issueQuaLifierXXXXXXXXXXXXUysLTj";
+        strIssueSubQualifierAssetFeeAddress = "n1issueSubQuaLifierXXXXXXXXXYffPLh";
+        strIssueRestrictedAssetFeeAddress = "n1issueRestrictedXXXXXXXXXXXXZVT9V";
+        strAddNullQualifierTagFeeAddress = "n1addTagBurnXXXXXXXXXXXXXXXXX5oLMH";
 
         // Global Burn Address
-        strGlobalBurnAddress = "n1BurnXXXXXXXXXXXXXXXXXXXXXXU1qejP";
+        strGlobalFeeAddress = "n1BurnXXXXXXXXXXXXXXXXXXXXXXU1qejP";
 
         // DGW Activation
         nDGWActivationBlock = 200;

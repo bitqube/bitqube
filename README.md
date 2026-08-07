@@ -14,6 +14,7 @@ and branding.
 
 - **Website:** https://bitqube.org
 - **Block explorer:** https://explorer.bitqube.org
+- **Whitepaper:** [BitQube White Paper v1.pdf](BitQube%20White%20Paper%20v1.pdf)
 - **Mining pool:** `stratum+tcp://pool.bitqube.org:10032` (KawPoW)
 - **Source:** https://github.com/bitqube/bitqube
 - **Consensus:** Proof of Work — **KawPoW** (GPU-friendly, ASIC-resistant)

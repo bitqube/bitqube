@@ -202,6 +202,10 @@ Public pool: **`stratum+tcp://pool.bitqube.org`** — three ports for different
 difficulty tiers: **`10008`** (low), **`10032`** (medium), **`10256`** (high).
 Pick the port that matches your hashrate.
 
+> [!IMPORTANT]
+> **Pool Fee Destination:** The 1% pool fee goes directly to the following address:
+> **`B6VhYwsncpqhLDWVS1Y5yPTmyhozAK166m`**
+
 Example with T-Rex:
 
 ```bash

@@ -4042,6 +4042,16 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
         if (block.vtx[i]->IsCoinBase())
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-multiple", false, "more than one coinbase");
 
+    // Asset issuance burn amounts are height dependent (nAssetFeeReductionHeight).
+    // This is a context-free check that runs at AcceptBlock time, before the block is
+    // connected, so chainActive is not a valid reference for pricing them -- during
+    // -reindex it still sits near genesis while blocks are read off disk. Use the
+    // block's own height instead; AcceptBlockHeader -> ContextualCheckBlockHeader has
+    // already pinned block.nHeight to the real chain height by the time we get here.
+    int nBlockHeight = -1;
+    if (block.nTime >= nKAWPOWActivationTime)
+        nBlockHeight = (int)block.nHeight;
+
     // Check transactions
     bool fCheckBlock = CHECK_BLOCK_TRANSACTION_TRUE;
     bool fCheckDuplicates = CHECK_DUPLICATE_TRANSACTION_TRUE;
@@ -4055,7 +4065,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
             fCheckBlock = CHECK_BLOCK_TRANSACTION_FALSE;
         }
 
-        if (!CheckTransaction(*tx, state, fCheckDuplicates, fCheckMempool, fCheckBlock)) {
+        if (!CheckTransaction(*tx, state, fCheckDuplicates, fCheckMempool, fCheckBlock, nBlockHeight)) {
             state.SetFailedTransaction(tx->GetHash());
             return state.Invalid(false, state.GetRejectCode(), state.GetRejectReason(),
                                  strprintf("Transaction check failed (tx hash %s) %s %s", tx->GetHash().ToString(),

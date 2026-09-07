@@ -26,7 +26,15 @@ class CNullAssetTxData;
 /** Transaction validation functions */
 
 /** Context-independent validity checks */
-bool CheckTransaction(const CTransaction& tx, CValidationState& state, bool fCheckDuplicateInputs=true, bool fMempoolCheck = false, bool fBlockCheck = false);
+/**
+ * Context-free transaction checks.
+ *
+ * nBlockHeight is the height of the block being validated, or -1 when the
+ * transaction is not part of a block yet (mempool, wallet). Asset issuance burn
+ * amounts are height dependent, and this check runs before the block is
+ * connected, so the active chain tip cannot be used to price them.
+ */
+bool CheckTransaction(const CTransaction& tx, CValidationState& state, bool fCheckDuplicateInputs=true, bool fMempoolCheck = false, bool fBlockCheck = false, int nBlockHeight = -1);
 
 namespace Consensus {
 /**

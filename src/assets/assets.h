@@ -377,17 +377,20 @@ public :
 };
 
 //! Functions to be used to get access to the current burn amount required for specific asset issuance transactions
-CAmount GetIssueAssetBurnAmount();
-CAmount GetReissueAssetBurnAmount();
-CAmount GetIssueSubAssetBurnAmount();
-CAmount GetIssueUniqueAssetBurnAmount();
-CAmount GetIssueMsgChannelAssetBurnAmount();
-CAmount GetIssueQualifierAssetBurnAmount();
-CAmount GetIssueSubQualifierAssetBurnAmount();
-CAmount GetIssueRestrictedAssetBurnAmount();
-CAmount GetAddNullQualifierTagBurnAmount();
-CAmount GetBurnAmount(const AssetType type);
-CAmount GetBurnAmount(const int nType);
+/** The asset issuance fee is height dependent (see nAssetFeeReductionHeight). Pass the
+ *  height of the block the transaction belongs to when validating a block; leave nHeight
+ *  at -1 (wallet, RPC, GUI) to price against the current chain tip. */
+CAmount GetIssueAssetBurnAmount(int nHeight = -1);
+CAmount GetReissueAssetBurnAmount(int nHeight = -1);
+CAmount GetIssueSubAssetBurnAmount(int nHeight = -1);
+CAmount GetIssueUniqueAssetBurnAmount(int nHeight = -1);
+CAmount GetIssueMsgChannelAssetBurnAmount(int nHeight = -1);
+CAmount GetIssueQualifierAssetBurnAmount(int nHeight = -1);
+CAmount GetIssueSubQualifierAssetBurnAmount(int nHeight = -1);
+CAmount GetIssueRestrictedAssetBurnAmount(int nHeight = -1);
+CAmount GetAddNullQualifierTagBurnAmount(int nHeight = -1);
+CAmount GetBurnAmount(const AssetType type, int nHeight = -1);
+CAmount GetBurnAmount(const int nType, int nHeight = -1);
 
 //! Functions to be used to get access to the burn address for a given asset type issuance
 std::string GetFeeAddress(const AssetType type);
@@ -455,12 +458,11 @@ bool AssetNullVerifierDataFromScript(const CScript& scriptPubKey, CNullAssetTxVe
 bool GlobalAssetNullDataFromScript(const CScript& scriptPubKey, CNullAssetTxData& assetData);
 
 //! Check to make sure the script contains the burn transaction
-bool CheckIssueBurnTx(const CTxOut& txOut, const AssetType& type, const int numberIssued);
-bool CheckIssueBurnTx(const CTxOut& txOut, const AssetType& type);
+bool CheckIssueBurnTx(const CTxOut& txOut, const AssetType& type, const int numberIssued, int nHeight);
 
 // TODO, maybe remove this function and input that check into the CheckIssueBurnTx.
 //! Check to make sure the script contains the reissue burn data
-bool CheckReissueBurnTx(const CTxOut& txOut);
+bool CheckReissueBurnTx(const CTxOut& txOut, int nHeight);
 
 //! issue asset scripts to make sure script meets the standards
 bool CheckIssueDataTx(const CTxOut& txOut); // OP_BITQUBE_ASSET BTQQ (That is a Q as in Que not an O)

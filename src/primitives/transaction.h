@@ -331,19 +331,19 @@ public:
 
     /** BTQ START */
     bool IsNewAsset() const;
-    bool VerifyNewAsset(std::string& strError) const;
+    bool VerifyNewAsset(std::string& strError, int nHeight = -1) const;
     bool IsNewUniqueAsset() const;
-    bool VerifyNewUniqueAsset(std::string& strError) const;
+    bool VerifyNewUniqueAsset(std::string& strError, int nHeight = -1) const;
     bool IsReissueAsset() const;
-    bool VerifyReissueAsset(std::string& strError) const;
+    bool VerifyReissueAsset(std::string& strError, int nHeight = -1) const;
     bool IsNewMsgChannelAsset() const;
-    bool VerifyNewMsgChannelAsset(std::string& strError) const;
+    bool VerifyNewMsgChannelAsset(std::string& strError, int nHeight = -1) const;
     bool IsNewQualifierAsset() const;
-    bool VerifyNewQualfierAsset(std::string &strError) const;
+    bool VerifyNewQualfierAsset(std::string &strError, int nHeight = -1) const;
     bool IsNewRestrictedAsset() const;
-    bool VerifyNewRestrictedAsset(std::string& strError) const;
+    bool VerifyNewRestrictedAsset(std::string& strError, int nHeight = -1) const;
 
-    bool CheckAddingTagBurnFee(const int& count) const;
+    bool CheckAddingTagBurnFee(const int& count, int nHeight = -1) const;
 
     bool GetVerifierStringFromTx(CNullAssetTxVerifierString& verifier, std::string& strError) const;
     bool GetVerifierStringFromTx(CNullAssetTxVerifierString& verifier, std::string& strError, bool& fNotFound) const;

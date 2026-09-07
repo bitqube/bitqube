@@ -952,7 +952,7 @@ bool CTransaction::IsNewUniqueAsset() const
 }
 
 //! Call this function after IsNewUniqueAsset
-bool CTransaction::VerifyNewUniqueAsset(std::string& strError) const
+bool CTransaction::VerifyNewUniqueAsset(std::string& strError, int nHeight) const
 {
     // Must contain at least 3 outpoints (BTQ burn, owner change and one or more new unique assets that share a root (should be in trailing position))
     if (vout.size() < 3) {
@@ -1000,7 +1000,7 @@ bool CTransaction::VerifyNewUniqueAsset(std::string& strError) const
     // check for burn outpoint (must account for each new asset)
     bool fBurnOutpointFound = false;
     for (auto out : vout) {
-        if (CheckIssueBurnTx(out, AssetType::UNIQUE, assetOutpointCount)) {
+        if (CheckIssueBurnTx(out, AssetType::UNIQUE, assetOutpointCount, nHeight)) {
             fBurnOutpointFound = true;
             break;
         }
@@ -1045,7 +1045,7 @@ bool CTransaction::VerifyNewUniqueAsset(std::string& strError) const
 }
 
 //! To be called on CTransactions where IsNewAsset returns true
-bool CTransaction::VerifyNewAsset(std::string& strError) const {
+bool CTransaction::VerifyNewAsset(std::string& strError, int nHeight) const {
     // Issuing an Asset must contain at least 3 CTxOut( BitQube Burn Tx, Any Number of other Outputs ..., Owner Asset Tx, New Asset Tx)
     if (vout.size() < 3) {
         strError = "bad-txns-issue-vout-size-to-small";
@@ -1089,7 +1089,7 @@ bool CTransaction::VerifyNewAsset(std::string& strError) const {
     // Check for the Burn CTxOut in one of the vouts ( This is needed because the change CTxOut is places in a random position in the CWalletTx
     bool fFoundIssueBurnTx = false;
     for (auto out : vout) {
-        if (CheckIssueBurnTx(out, assetType)) {
+        if (CheckIssueBurnTx(out, assetType, 1, nHeight)) {
             fFoundIssueBurnTx = true;
             break;
         }
@@ -1149,7 +1149,7 @@ bool CTransaction::IsNewMsgChannelAsset() const
 }
 
 //! To be called on CTransactions where IsNewAsset returns true
-bool CTransaction::VerifyNewMsgChannelAsset(std::string &strError) const
+bool CTransaction::VerifyNewMsgChannelAsset(std::string &strError, int nHeight) const
 {
     // Issuing an Asset must contain at least 3 CTxOut( BitQube Burn Tx, Any Number of other Outputs ..., Owner Asset Tx, New Asset Tx)
     if (vout.size() < 3) {
@@ -1177,7 +1177,7 @@ bool CTransaction::VerifyNewMsgChannelAsset(std::string &strError) const
     // Check for the Burn CTxOut in one of the vouts ( This is needed because the change CTxOut is places in a random position in the CWalletTx
     bool fFoundIssueBurnTx = false;
     for (auto out : vout) {
-        if (CheckIssueBurnTx(out, AssetType::MSGCHANNEL)) {
+        if (CheckIssueBurnTx(out, AssetType::MSGCHANNEL, 1, nHeight)) {
             fFoundIssueBurnTx = true;
             break;
         }
@@ -1236,7 +1236,7 @@ bool CTransaction::IsNewQualifierAsset() const
 }
 
 //! To be called on CTransactions where IsNewQualifierAsset returns true
-bool CTransaction::VerifyNewQualfierAsset(std::string &strError) const
+bool CTransaction::VerifyNewQualfierAsset(std::string &strError, int nHeight) const
 {
     // Issuing an Asset must contain at least 2 CTxOut( BitQube Burn Tx, New Asset Tx, Any Number of other Outputs...)
     if (vout.size() < 2) {
@@ -1264,7 +1264,7 @@ bool CTransaction::VerifyNewQualfierAsset(std::string &strError) const
     // Check for the Burn CTxOut in one of the vouts ( This is needed because the change CTxOut is places in a random position in the CWalletTx
     bool fFoundIssueBurnTx = false;
     for (auto out : vout) {
-        if (CheckIssueBurnTx(out, assetType)) {
+        if (CheckIssueBurnTx(out, assetType, 1, nHeight)) {
             fFoundIssueBurnTx = true;
             break;
         }
@@ -1325,7 +1325,7 @@ bool CTransaction::IsNewRestrictedAsset() const
 }
 
 //! To be called on CTransactions where IsNewRestrictedAsset returns true
-bool CTransaction::VerifyNewRestrictedAsset(std::string& strError) const {
+bool CTransaction::VerifyNewRestrictedAsset(std::string& strError, int nHeight) const {
     // Issuing a restricted asset must cointain at least 4 CTxOut(BitQube Burn Tx, Asset Creation, Root Owner Token Transfer, and CNullAssetTxVerifierString)
     if (vout.size() < 4) {
         strError = "bad-txns-issue-restricted-vout-size-to-small";
@@ -1352,7 +1352,7 @@ bool CTransaction::VerifyNewRestrictedAsset(std::string& strError) const {
     // Check for the Burn CTxOut in one of the vouts ( This is needed because the change CTxOut is places in a random position in the CWalletTx
     bool fFoundIssueBurnTx = false;
     for (auto out : vout) {
-        if (CheckIssueBurnTx(out, assetType)) {
+        if (CheckIssueBurnTx(out, assetType, 1, nHeight)) {
             fFoundIssueBurnTx = true;
             break;
         }
@@ -1453,7 +1453,7 @@ bool CTransaction::IsReissueAsset() const
 }
 
 //! To be called on CTransactions where IsReissueAsset returns true
-bool CTransaction::VerifyReissueAsset(std::string& strError) const
+bool CTransaction::VerifyReissueAsset(std::string& strError, int nHeight) const
 {
     // Reissuing an Asset must contain at least 3 CTxOut ( BitQube Burn Tx, Any Number of other Outputs ..., Reissue Asset Tx, Owner Asset Change Tx)
     if (vout.size() < 3) {
@@ -1507,7 +1507,7 @@ bool CTransaction::VerifyReissueAsset(std::string& strError) const
     // Check for the Burn CTxOut in one of the vouts ( This is needed because the change CTxOut is placed in a random position in the CWalletTx
     bool fFoundReissueBurnTx = false;
     for (auto out : vout) {
-        if (CheckReissueBurnTx(out)) {
+        if (CheckReissueBurnTx(out, nHeight)) {
             fFoundReissueBurnTx = true;
             break;
         }
@@ -1533,12 +1533,12 @@ bool CTransaction::VerifyReissueAsset(std::string& strError) const
     return true;
 }
 
-bool CTransaction::CheckAddingTagBurnFee(const int& count) const
+bool CTransaction::CheckAddingTagBurnFee(const int& count, int nHeight) const
 {
     // check for burn outpoint )
     bool fBurnOutpointFound = false;
     for (auto out : vout) {
-        if (CheckIssueBurnTx(out, AssetType::NULL_ADD_QUALIFIER, count)) {
+        if (CheckIssueBurnTx(out, AssetType::NULL_ADD_QUALIFIER, count, nHeight)) {
             fBurnOutpointFound = true;
             break;
         }
@@ -3064,7 +3064,7 @@ size_t CAssetsCache::GetCacheSizeV2() const
     return size;
 }
 
-bool CheckIssueBurnTx(const CTxOut& txOut, const AssetType& type, const int numberIssued)
+bool CheckIssueBurnTx(const CTxOut& txOut, const AssetType& type, const int numberIssued, int nHeight)
 {
     if (type == AssetType::REISSUE || type == AssetType::VOTE || type == AssetType::OWNER || type == AssetType::INVALID)
         return false;
@@ -3073,7 +3073,7 @@ bool CheckIssueBurnTx(const CTxOut& txOut, const AssetType& type, const int numb
     std::string burnAddress = "";
 
     // Get the burn address and amount for the type of asset
-    burnAmount = GetBurnAmount(type);
+    burnAmount = GetBurnAmount(type, nHeight);
     burnAddress = GetFeeAddress(type);
 
     // If issuing multiple (unique) assets need to burn for each
@@ -3100,15 +3100,10 @@ bool CheckIssueBurnTx(const CTxOut& txOut, const AssetType& type, const int numb
     return true;
 }
 
-bool CheckIssueBurnTx(const CTxOut& txOut, const AssetType& type)
-{
-    return CheckIssueBurnTx(txOut, type, 1);
-}
-
-bool CheckReissueBurnTx(const CTxOut& txOut)
+bool CheckReissueBurnTx(const CTxOut& txOut, int nHeight)
 {
     // Check the first transaction and verify that the correct BTQ Amount
-    if (txOut.nValue != GetReissueAssetBurnAmount())
+    if (txOut.nValue != GetReissueAssetBurnAmount(nHeight))
         return false;
 
     // Extract the destination
@@ -3608,89 +3603,108 @@ void GetAllMyAssets(CWallet* pwallet, std::vector<std::string>& names, int nMinC
 // Asset issuance fees are height-gated: the original ("legacy") fees apply up
 // to GetAssetFeeReductionHeight() so that the pre-reduction chain history
 // (issuances that burned the old amounts) stays valid; the reduced fees held
-// in chainparams apply from that height onward. Uses chainActive.Height() the
-// same way the asset-activation gate does.
-static bool UseReducedAssetFees()
+// in chainparams apply from that height onward.
+//
+// nHeight is the height of the block the transaction belongs to. It MUST be
+// supplied when validating a block: the burn amount is checked on the
+// context-free CheckTransaction path, which runs at AcceptBlock time before the
+// block is connected, so the active chain tip is not a valid reference there.
+// During -reindex the tip still sits near genesis while blocks are read off
+// disk, which made every post-reduction issuance fail with
+// "bad-txns-issue-burn-not-found" and stopped the rebuild dead.
+//
+// nHeight == -1 means "price against the current tip" and is what the wallet,
+// RPC and GUI want, since they are building a transaction for the next block.
+// The two forms agree: a transaction admitted to the mempool at tip T is mined
+// at height T+1, and (T >= R) is the same condition as (T+1 > R). Keeping the
+// block form as a strict '>' reproduces exactly what this chain already
+// enforced when the blocks were first connected (the tip was H-1 at the time),
+// so no historical block changes validity.
+static bool UseReducedAssetFees(int nHeight)
 {
-    return chainActive.Tip() != nullptr &&
-           chainActive.Height() >= GetParams().GetAssetFeeReductionHeight();
+    const int nReductionHeight = GetParams().GetAssetFeeReductionHeight();
+
+    if (nHeight < 0)
+        return chainActive.Tip() != nullptr && chainActive.Height() >= nReductionHeight;
+
+    return nHeight > nReductionHeight;
 }
 
-CAmount GetIssueAssetBurnAmount()
+CAmount GetIssueAssetBurnAmount(int nHeight)
 {
-    return UseReducedAssetFees() ? GetParams().IssueAssetBurnAmount() : 500 * COIN;
+    return UseReducedAssetFees(nHeight) ? GetParams().IssueAssetBurnAmount() : 500 * COIN;
 }
 
-CAmount GetReissueAssetBurnAmount()
+CAmount GetReissueAssetBurnAmount(int nHeight)
 {
-    return UseReducedAssetFees() ? GetParams().ReissueAssetBurnAmount() : 100 * COIN;
+    return UseReducedAssetFees(nHeight) ? GetParams().ReissueAssetBurnAmount() : 100 * COIN;
 }
 
-CAmount GetIssueSubAssetBurnAmount()
+CAmount GetIssueSubAssetBurnAmount(int nHeight)
 {
-    return UseReducedAssetFees() ? GetParams().IssueSubAssetBurnAmount() : 100 * COIN;
+    return UseReducedAssetFees(nHeight) ? GetParams().IssueSubAssetBurnAmount() : 100 * COIN;
 }
 
-CAmount GetIssueUniqueAssetBurnAmount()
+CAmount GetIssueUniqueAssetBurnAmount(int nHeight)
 {
-    return UseReducedAssetFees() ? GetParams().IssueUniqueAssetBurnAmount() : 5 * COIN;
+    return UseReducedAssetFees(nHeight) ? GetParams().IssueUniqueAssetBurnAmount() : 5 * COIN;
 }
 
-CAmount GetIssueMsgChannelAssetBurnAmount()
+CAmount GetIssueMsgChannelAssetBurnAmount(int nHeight)
 {
-    return UseReducedAssetFees() ? GetParams().IssueMsgChannelAssetBurnAmount() : 100 * COIN;
+    return UseReducedAssetFees(nHeight) ? GetParams().IssueMsgChannelAssetBurnAmount() : 100 * COIN;
 }
 
-CAmount GetIssueQualifierAssetBurnAmount()
+CAmount GetIssueQualifierAssetBurnAmount(int nHeight)
 {
-    return UseReducedAssetFees() ? GetParams().IssueQualifierAssetBurnAmount() : 1000 * COIN;
+    return UseReducedAssetFees(nHeight) ? GetParams().IssueQualifierAssetBurnAmount() : 1000 * COIN;
 }
 
-CAmount GetIssueSubQualifierAssetBurnAmount()
+CAmount GetIssueSubQualifierAssetBurnAmount(int nHeight)
 {
-    return UseReducedAssetFees() ? GetParams().IssueSubQualifierAssetBurnAmount() : 100 * COIN;
+    return UseReducedAssetFees(nHeight) ? GetParams().IssueSubQualifierAssetBurnAmount() : 100 * COIN;
 }
 
-CAmount GetIssueRestrictedAssetBurnAmount()
+CAmount GetIssueRestrictedAssetBurnAmount(int nHeight)
 {
-    return UseReducedAssetFees() ? GetParams().IssueRestrictedAssetBurnAmount() : 1500 * COIN;
+    return UseReducedAssetFees(nHeight) ? GetParams().IssueRestrictedAssetBurnAmount() : 1500 * COIN;
 }
 
-CAmount GetAddNullQualifierTagBurnAmount()
+CAmount GetAddNullQualifierTagBurnAmount(int nHeight)
 {
-    return UseReducedAssetFees() ? GetParams().AddNullQualifierTagBurnAmount() : 0.1 * COIN;
+    return UseReducedAssetFees(nHeight) ? GetParams().AddNullQualifierTagBurnAmount() : 0.1 * COIN;
 }
 
-CAmount GetBurnAmount(const int nType)
+CAmount GetBurnAmount(const int nType, int nHeight)
 {
-    return GetBurnAmount((AssetType(nType)));
+    return GetBurnAmount((AssetType(nType)), nHeight);
 }
 
-CAmount GetBurnAmount(const AssetType type)
+CAmount GetBurnAmount(const AssetType type, int nHeight)
 {
     switch (type) {
         case AssetType::ROOT:
-            return GetIssueAssetBurnAmount();
+            return GetIssueAssetBurnAmount(nHeight);
         case AssetType::SUB:
-            return GetIssueSubAssetBurnAmount();
+            return GetIssueSubAssetBurnAmount(nHeight);
         case AssetType::MSGCHANNEL:
-            return GetIssueMsgChannelAssetBurnAmount();
+            return GetIssueMsgChannelAssetBurnAmount(nHeight);
         case AssetType::OWNER:
             return 0;
         case AssetType::UNIQUE:
-            return GetIssueUniqueAssetBurnAmount();
+            return GetIssueUniqueAssetBurnAmount(nHeight);
         case AssetType::VOTE:
             return 0;
         case AssetType::REISSUE:
-            return GetReissueAssetBurnAmount();
+            return GetReissueAssetBurnAmount(nHeight);
         case AssetType::QUALIFIER:
-            return GetIssueQualifierAssetBurnAmount();
+            return GetIssueQualifierAssetBurnAmount(nHeight);
         case AssetType::SUB_QUALIFIER:
-            return GetIssueSubQualifierAssetBurnAmount();
+            return GetIssueSubQualifierAssetBurnAmount(nHeight);
         case AssetType::RESTRICTED:
-            return GetIssueRestrictedAssetBurnAmount();
+            return GetIssueRestrictedAssetBurnAmount(nHeight);
         case AssetType::NULL_ADD_QUALIFIER:
-            return GetAddNullQualifierTagBurnAmount();
+            return GetAddNullQualifierTagBurnAmount(nHeight);
         default:
             return 0;
     }

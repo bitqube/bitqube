@@ -166,7 +166,7 @@ int64_t GetTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& i
     return nSigOps;
 }
 
-bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fCheckDuplicateInputs, bool fMempoolCheck, bool fBlockCheck)
+bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fCheckDuplicateInputs, bool fMempoolCheck, bool fBlockCheck, int nBlockHeight)
 {
     // Basic checks that don't depend on any context
     if (tx.vin.empty())
@@ -335,7 +335,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
 
     // Check for Add Tag Burn Fee
     if (nCountAddTagOuts) {
-        if (!tx.CheckAddingTagBurnFee(nCountAddTagOuts))
+        if (!tx.CheckAddingTagBurnFee(nCountAddTagOuts, nBlockHeight))
             return state.DoS(100, false, REJECT_INVALID, "bad-txns-tx-doesn't-contain-required-burn-fee-for-adding-tags");
     }
 
@@ -399,7 +399,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
     if (tx.IsNewAsset()) {
         /** Verify the reissue assets data */
         std::string strError = "";
-        if(!tx.VerifyNewAsset(strError))
+        if(!tx.VerifyNewAsset(strError, nBlockHeight))
             return state.DoS(100, false, REJECT_INVALID, strError);
 
         CNewAsset asset;
@@ -418,7 +418,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
 
         /** Verify the reissue assets data */
         std::string strError;
-        if (!tx.VerifyReissueAsset(strError))
+        if (!tx.VerifyReissueAsset(strError, nBlockHeight))
             return state.DoS(100, false, REJECT_INVALID, strError);
 
         CReissueAsset reissue;
@@ -454,7 +454,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
 
         /** Verify the unique assets data */
         std::string strError = "";
-        if (!tx.VerifyNewUniqueAsset(strError)) {
+        if (!tx.VerifyNewUniqueAsset(strError, nBlockHeight)) {
             return state.DoS(100, false, REJECT_INVALID, strError);
         }
 
@@ -475,7 +475,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
     } else if (tx.IsNewMsgChannelAsset()) {
         /** Verify the msg channel assets data */
         std::string strError = "";
-        if(!tx.VerifyNewMsgChannelAsset(strError))
+        if(!tx.VerifyNewMsgChannelAsset(strError, nBlockHeight))
             return state.DoS(100, false, REJECT_INVALID, strError);
 
         CNewAsset asset;
@@ -489,7 +489,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
     } else if (tx.IsNewQualifierAsset()) {
         /** Verify the qualifier channel assets data */
         std::string strError = "";
-        if(!tx.VerifyNewQualfierAsset(strError))
+        if(!tx.VerifyNewQualfierAsset(strError, nBlockHeight))
             return state.DoS(100, false, REJECT_INVALID, strError);
 
         CNewAsset asset;
@@ -503,7 +503,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
     } else if (tx.IsNewRestrictedAsset()) {
         /** Verify the restricted assets data. */
         std::string strError = "";
-        if(!tx.VerifyNewRestrictedAsset(strError))
+        if(!tx.VerifyNewRestrictedAsset(strError, nBlockHeight))
             return state.DoS(100, false, REJECT_INVALID, strError);
 
         // Get asset data

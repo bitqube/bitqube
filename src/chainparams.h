@@ -143,6 +143,7 @@ public:
 
     int GetAssetActivationHeight() const { return nAssetActivationHeight; }
     int GetAssetFeeReductionHeight() const { return nAssetFeeReductionHeight; }
+    int GetTransferOverflowHeight() const { return nTransferOverflowHeight; }
     /** BTQ End **/
 
 protected:
@@ -201,6 +202,7 @@ protected:
 
     int nAssetActivationHeight;
     int nAssetFeeReductionHeight;
+    int nTransferOverflowHeight;
 
     uint32_t nKAAAWWWPOWActivationTime;
     /** BTQ End **/

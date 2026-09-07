@@ -5779,6 +5779,12 @@ void SetEnforcedCoinbase(bool value)
     fCheckCoinbaseAssetsIsActive = value;
 }
 
+// Only used by test framework
+void SetTransferOverflow(bool value)
+{
+    fCheckTransferOverflowIsActive = value;
+}
+
 bool AreEnforcedValuesDeployed()
 {
     if (fEnforcedValuesIsActive)
@@ -5886,6 +5892,22 @@ bool IsRestrictedActive(unsigned int nBlockNumber)
     } else {
         return AreRestrictedAssetsDeployed();
     }
+}
+
+// The asset transfer quantity overflow checks in Consensus::CheckTxAssets are
+// height-gated the same way the asset fee reduction is, so that chain history
+// mined before the check existed cannot be invalidated retroactively. BitQube
+// sets the height to 0 on every network, i.e. the checks always apply.
+bool IsTransferOverflowCheckDeployed()
+{
+    if (fCheckTransferOverflowIsActive)
+        return true;
+
+    const int nActivationHeight = GetParams().GetTransferOverflowHeight();
+    if (nActivationHeight <= 0)
+        return true;
+
+    return chainActive.Tip() != nullptr && chainActive.Height() >= nActivationHeight;
 }
 
 CAssetsCache* GetCurrentAssetCache()

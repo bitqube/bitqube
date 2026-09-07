@@ -82,6 +82,10 @@ struct Params {
     uint256 defaultAssumeValid;
     bool nSegwitEnabled;
     bool nCSVEnabled;
+    /** Height from which the KAWPOW header's declared nHeight must match the block's
+     *  actual chain height. Below it the field is not checked, so pre-existing chain
+     *  history stays valid. */
+    int nHeightHeaderCheckActivation;
 };
 } // namespace Consensus
 

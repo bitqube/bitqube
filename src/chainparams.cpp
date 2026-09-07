@@ -154,6 +154,7 @@ public:
         consensus.nBIP66Enabled = true;
         consensus.nSegwitEnabled = true;
         consensus.nCSVEnabled = true;
+        consensus.nHeightHeaderCheckActivation = 0; // BitQube: the KAWPOW header's declared height must match the chain height for every block
         // BitQube: low launch difficulty so the first blocks are CPU-mineable (see nCPUMiningEpochBlocks).
         consensus.powLimit = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.kawpowLimit = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // Matches powLimit for a smooth launch
@@ -321,6 +322,7 @@ public:
         consensus.nBIP66Enabled = true;
         consensus.nSegwitEnabled = true;
         consensus.nCSVEnabled = true;
+        consensus.nHeightHeaderCheckActivation = 0; // BitQube: the KAWPOW header's declared height must match the chain height for every block
 
         // BitQube testnet: low launch difficulty, CPU-mineable (mirrors mainnet).
         consensus.powLimit = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
@@ -543,6 +545,7 @@ public:
         consensus.nBIP66Enabled = true;
         consensus.nSegwitEnabled = true;
         consensus.nCSVEnabled = true;
+        consensus.nHeightHeaderCheckActivation = 0; // BitQube: the KAWPOW header's declared height must match the chain height for every block
         consensus.nSubsidyHalvingInterval = 150;
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.kawpowLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");

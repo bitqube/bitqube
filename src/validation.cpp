@@ -4169,6 +4169,21 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationSta
     if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
         return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
 
+    // The height declared inside the KAWPOW header feeds the PoW hash, the DAG epoch
+    // and the ProgPoW period, but was never compared against the actual height of the
+    // block. A block declaring a height at or below the last checkpoint takes the
+    // mix_hash-only shortcut in CheckBlockHeader, and that path never validates
+    // mix_hash against the dataset, so a block could be accepted while carrying no
+    // ProgPoW work at all. Require the declared height to match.
+    if (nHeight >= consensusParams.nHeightHeaderCheckActivation &&
+        block.nTime >= nKAWPOWActivationTime &&
+        block.nHeight != (uint32_t)nHeight) {
+        return state.DoS(100,
+                         error("%s: declared header height %u does not match chain height %d",
+                               __func__, block.nHeight, nHeight),
+                         REJECT_INVALID, "bad-blk-height");
+    }
+
     // Check against checkpoints
     if (fCheckpointsEnabled) {
         // Don't accept any forks from the main chain prior to last checkpoint.
